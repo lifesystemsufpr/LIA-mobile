@@ -1,0 +1,207 @@
+<div class="animate-fade-in max-w-6xl mx-auto pb-12">
+    
+    <!-- HEADER -->
+    <div class="flex justify-between items-end mb-6">
+        <div>
+            <h1 class="text-2xl font-black text-primary leading-none">Análise da População Geral</h1>
+            <p class="text-sm font-medium text-gray-400 mt-1">Visão geral dos participantes e avaliações da plataforma</p>
+        </div>
+        <div class="text-right flex gap-6">
+            <div>
+                <p class="text-lg font-bold text-primary" id="pg-total-participants">--</p>
+                <p class="text-[10px] font-bold uppercase tracking-wider text-gray-500">participantes</p>
+            </div>
+            <div>
+                <p class="text-lg font-bold text-secondary" id="pg-total-evals">--</p>
+                <p class="text-[10px] font-bold uppercase tracking-wider text-gray-500">avaliações</p>
+            </div>
+            <div>
+                <p class="text-lg font-bold text-emerald-600" id="pg-total-protocols">--</p>
+                <p class="text-[10px] font-bold uppercase tracking-wider text-gray-500">protocolos</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEÇÃO DE FILTROS -->
+    <div class="bg-surface rounded-xl border border-border shadow-sm p-5 mb-8">
+        <h2 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">População Analisada</h2>
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
+            <div>
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Período</label>
+                <select id="pg-filter-period" class="w-full bg-gray-50 border border-gray-200 text-sm rounded-lg p-2 focus:ring-primary focus:border-primary text-gray-700">
+                    <option value="all">Todos</option>
+                    <option value="2026">2026</option>
+                    <option value="2025">2025</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Faixa Etária</label>
+                <select id="pg-filter-age" class="w-full bg-gray-50 border border-gray-200 text-sm rounded-lg p-2 focus:ring-primary focus:border-primary text-gray-700">
+                    <option value="all">Todas</option>
+                    <option value="<60">< 60 anos</option>
+                    <option value="60-69">60–69 anos</option>
+                    <option value="70-79">70–79 anos</option>
+                    <option value="80+">80+ anos</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Sexo</label>
+                <select id="pg-filter-sex" class="w-full bg-gray-50 border border-gray-200 text-sm rounded-lg p-2 focus:ring-primary focus:border-primary text-gray-700">
+                    <option value="all">Todos</option>
+                    <option value="F">Feminino</option>
+                    <option value="M">Masculino</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Unidade</label>
+                <select id="pg-filter-unit" class="w-full bg-gray-50 border border-gray-200 text-sm rounded-lg p-2 focus:ring-primary focus:border-primary text-gray-700">
+                    <option value="all">Todas</option>
+                    <option value="U1">Unidade Central</option>
+                    <option value="U2">Unidade Norte</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Protocolo</label>
+                <select id="pg-filter-protocol" class="w-full bg-gray-50 border border-gray-200 text-sm rounded-lg p-2 focus:ring-primary focus:border-primary text-gray-700">
+                    <option value="all">Todos</option>
+                    <option value="30sSTS">30sSTS</option>
+                    <option value="TUG">TUG</option>
+                    <option value="5TSTS">5TSTS</option>
+                    <option value="UTT">UTT</option>
+                    <option value="2MST">2MST</option>
+                </select>
+            </div>
+        </div>
+        <div class="bg-primary/5 rounded-lg p-3 flex flex-col md:flex-row justify-between items-center border border-primary/10">
+            <p class="text-sm font-semibold text-primary" id="pg-active-filters-text">Todos os protocolos · Todos os anos · Todas as unidades</p>
+            <div class="text-xs font-bold text-gray-600 mt-2 md:mt-0">
+                <span id="pg-filtered-parts">-- participantes</span>
+                <span class="mx-2 text-gray-300">|</span>
+                <span id="pg-filtered-evals">-- avaliações</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- DISTRIBUIÇÃO DEMOGRÁFICA -->
+    <h2 class="text-lg font-bold text-text-main mb-4 flex items-center gap-2">
+        <i data-lucide="users" class="w-5 h-5 text-primary"></i> Perfil da População
+    </h2>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- Idade -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            <div class="flex justify-between items-center mb-1">
+                <h3 class="text-sm font-bold text-gray-600">Distribuição por Faixa Etária</h3>
+            </div>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-4">n = Participantes únicos</p>
+            <div class="relative w-full h-64">
+                <canvas id="pgAgeChart"></canvas>
+            </div>
+        </div>
+        <!-- Sexo -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            <h3 class="text-sm font-bold text-gray-600 mb-1">Distribuição por Sexo</h3>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-4">n = Participantes únicos</p>
+            <div class="relative w-full h-64 flex flex-col justify-center">
+                <canvas id="pgSexChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- AVALIAÇÕES AO LONGO DO TEMPO -->
+    <h2 class="text-lg font-bold text-text-main mb-4 flex items-center gap-2">
+        <i data-lucide="calendar" class="w-5 h-5 text-primary"></i> Avaliações ao Longo do Tempo
+    </h2>
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-8">
+        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-4">n = Avaliações</p>
+        <div class="relative w-full h-72">
+            <canvas id="pgTimelineChart"></canvas>
+        </div>
+    </div>
+
+    <!-- PROTOCOLOS E PARTICIPANTES -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- Por Protocolo -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            <h3 class="text-lg font-bold text-text-main mb-1 flex items-center gap-2">
+                <i data-lucide="clipboard-list" class="w-5 h-5 text-primary"></i> Distribuição por Protocolo
+            </h3>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-4">n = Avaliações</p>
+            <div class="relative w-full h-64">
+                <canvas id="pgProtocolChart"></canvas>
+            </div>
+        </div>
+        <!-- Por Participante -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            <h3 class="text-lg font-bold text-text-main mb-1 flex items-center gap-2">
+                <i data-lucide="bar-chart" class="w-5 h-5 text-primary"></i> Avaliações por Participante
+            </h3>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-4">n = Participantes únicos</p>
+            <div class="relative w-full h-64">
+                <canvas id="pgEvalsPerPartChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABELAS DE COBERTURA E RESULTADOS -->
+    <h2 class="text-lg font-bold text-text-main mb-4 flex items-center gap-2">
+        <i data-lucide="table" class="w-5 h-5 text-primary"></i> Cobertura e Resultados
+    </h2>
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
+        <!-- Cobertura -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden flex flex-col">
+            <div class="p-4 bg-gray-50 border-b border-gray-200">
+                <h3 class="text-sm font-bold text-gray-700">Cobertura por Protocolo</h3>
+            </div>
+            <div class="overflow-x-auto flex-1">
+                <table class="w-full text-sm text-left border-collapse">
+                    <thead class="text-xs text-gray-500 uppercase bg-gray-50/50">
+                        <tr>
+                            <th class="px-4 py-3 font-bold border-b border-gray-100">Protocolo</th>
+                            <th class="px-4 py-3 font-bold text-right border-b border-gray-100">Avaliações</th>
+                            <th class="px-4 py-3 font-bold text-right border-b border-gray-100">Participantes</th>
+                            <th class="px-4 py-3 font-bold text-right border-b border-gray-100" title="Participantes com mais de uma avaliação">≥2 Aval.</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pg-coverage-table" class="divide-y divide-gray-100">
+                        <!-- Tabela preenchida por JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Resultados -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden flex flex-col">
+            <div class="p-4 bg-gray-50 border-b border-gray-200">
+                <h3 class="text-sm font-bold text-gray-700">Resultados Agregados</h3>
+            </div>
+            <div class="overflow-x-auto flex-1">
+                <table class="w-full text-sm text-left border-collapse">
+                    <thead class="text-xs text-gray-500 uppercase bg-gray-50/50">
+                        <tr>
+                            <th class="px-4 py-3 font-bold border-b border-gray-100">Protocolo / Medida</th>
+                            <th class="px-4 py-3 font-bold text-right border-b border-gray-100">Mediana</th>
+                            <th class="px-4 py-3 font-bold text-right text-gray-400 border-b border-gray-100">P25</th>
+                            <th class="px-4 py-3 font-bold text-right text-gray-400 border-b border-gray-100">P75</th>
+                            <th class="px-4 py-3 font-bold text-right border-b border-gray-100">n</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pg-results-table" class="divide-y divide-gray-100">
+                        <!-- Tabela preenchida por JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- EXPLORADOR DE PROTOCOLO -->
+    <div id="pg-explorer-card" class="bg-primary/5 rounded-xl border border-primary/20 shadow-sm p-6 flex flex-col md:flex-row items-center justify-between transition-all hidden">
+        <div>
+            <h3 class="text-lg font-bold text-primary mb-1" id="pg-explorer-title">Explorar [Protocolo]</h3>
+            <p class="text-sm text-gray-600" id="pg-explorer-desc">-- avaliações · -- participantes</p>
+        </div>
+        <button id="pg-explorer-btn" class="mt-4 md:mt-0 px-6 py-3 bg-secondary text-white text-sm font-bold rounded-lg shadow-md hover:bg-orange-600 transition-colors flex items-center gap-2">
+            Abrir análise da população <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+    </div>
+
+</div>

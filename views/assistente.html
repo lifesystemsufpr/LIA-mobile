@@ -1,0 +1,219 @@
+<div class="h-[calc(100vh-6rem)] flex max-w-[1400px] mx-auto gap-6 pb-4 px-4 pt-4" id="assistente-container">
+    
+    <!-- Sidebar Historico -->
+    <div class="w-72 flex flex-col shrink-0 bg-surface rounded-2xl border border-border shadow-sm overflow-hidden h-full">
+        <div class="p-4 border-b border-gray-100">
+            <button id="assistente-new-btn" class="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary-light text-white font-medium py-3 rounded-xl transition-colors shadow-sm">
+                <i data-lucide="plus-square" class="w-5 h-5"></i> Nova conversa
+            </button>
+        </div>
+        <div class="flex-1 overflow-y-auto p-3 space-y-1">
+            <button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 text-left transition-colors text-gray-700 group">
+                <i data-lucide="message-square" class="w-4 h-4 text-gray-400 group-hover:text-primary shrink-0"></i>
+                <span class="text-sm truncate">Características do último...</span>
+            </button>
+            <button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 text-left transition-colors text-gray-700 group">
+                <i data-lucide="message-square" class="w-4 h-4 text-gray-400 group-hover:text-primary shrink-0"></i>
+                <span class="text-sm truncate">Resumo do perfil popu...</span>
+            </button>
+            <button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 text-left transition-colors text-gray-700 group">
+                <i data-lucide="message-square" class="w-4 h-4 text-gray-400 group-hover:text-primary shrink-0"></i>
+                <span class="text-sm truncate">Comparativo de veloc...</span>
+            </button>
+            <button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 text-left transition-colors text-gray-700 group">
+                <i data-lucide="message-square" class="w-4 h-4 text-gray-400 group-hover:text-primary shrink-0"></i>
+                <span class="text-sm truncate">Assimetria de Marcha P...</span>
+            </button>
+            <button class="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 text-left transition-colors text-gray-700 group">
+                <i data-lucide="message-square" class="w-4 h-4 text-gray-400 group-hover:text-primary shrink-0"></i>
+                <span class="text-sm truncate">Como está a autonomia d...</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Right Side (Chat / Ferramentas) -->
+    <div class="flex-1 flex flex-col min-w-0 h-full">
+        
+        <!-- Header -->
+        <div class="bg-surface rounded-2xl border border-border shadow-sm p-4 mb-4 flex justify-between items-center shrink-0">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                    <i data-lucide="bot" class="w-6 h-6 text-primary"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-black text-primary mb-0.5">Assistente de IA</h1>
+                    <p class="text-sm text-gray-500">Converse com os dados das suas avaliações clínicas e populacionais.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="flex gap-2 mb-4 shrink-0">
+            <button id="tab-chat" class="assistente-tab active px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-2 bg-white border border-gray-200 text-primary shadow-sm transition-colors">
+                <i data-lucide="message-square" class="w-4 h-4"></i> Chat
+            </button>
+            <button id="tab-ferramentas" class="assistente-tab px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-2 bg-transparent text-gray-500 hover:bg-gray-100 transition-colors">
+                <i data-lucide="book-open" class="w-4 h-4"></i> Ferramentas
+            </button>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div id="assistente-chat-area" class="flex-1 bg-surface border border-border rounded-2xl shadow-sm flex flex-col overflow-hidden relative">
+            
+            <!-- Messages Scrollable Container -->
+            <div id="assistente-messages" class="flex-1 overflow-y-auto p-6 space-y-6 scroll-smooth">
+                
+                <!-- Welcome Message (Assistant) -->
+                <div class="flex items-start gap-4 animate-fade-in">
+                    <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center shrink-0 mt-1 shadow-md">
+                        <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <div class="bg-gray-50 border border-gray-100 rounded-2xl rounded-tl-sm p-4 text-sm text-gray-700 shadow-sm max-w-[80%]">
+                        <p class="mb-2">Olá! Sou o seu <strong>Assistente LIA</strong> especializado em dados funcionais.</p>
+                        <p>Posso ajudar a analisar o desempenho individual, comparar métricas, resumir perfis populacionais ou extrair tendências dos testes. Como posso ajudar hoje?</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Suggestions Chips (Fade out on first message) -->
+            <div id="assistente-suggestions" class="absolute bottom-32 left-0 w-full px-6 flex flex-wrap gap-2 justify-center transition-opacity duration-300 pointer-events-auto">
+                <button class="suggestion-chip bg-white border border-gray-200 text-gray-600 px-4 py-2 text-xs rounded-full shadow-sm hover:shadow-md hover:border-primary hover:text-primary transition-all font-medium flex items-center gap-2">
+                    <i data-lucide="activity" class="w-4 h-4"></i> Quais são as características do último 30sSTS?
+                </button>
+                <button class="suggestion-chip bg-white border border-gray-200 text-gray-600 px-4 py-2 text-xs rounded-full shadow-sm hover:shadow-md hover:border-primary hover:text-primary transition-all font-medium flex items-center gap-2">
+                    <i data-lucide="users" class="w-4 h-4"></i> Resuma o perfil populacional de 2026.
+                </button>
+                <button class="suggestion-chip bg-white border border-gray-200 text-gray-600 px-4 py-2 text-xs rounded-full shadow-sm hover:shadow-md hover:border-primary hover:text-primary transition-all font-medium flex items-center gap-2">
+                    <i data-lucide="bar-chart-2" class="w-4 h-4"></i> Compare a velocidade angular média entre homens e mulheres.
+                </button>
+            </div>
+
+            <!-- Input Area -->
+            <div class="p-4 bg-white border-t border-border shrink-0 z-10 relative">
+                <div class="relative flex items-end gap-2 bg-gray-50 rounded-2xl border border-gray-200 p-2 focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all shadow-inner">
+                    <textarea id="assistente-input" rows="1" class="w-full bg-transparent border-none text-sm text-gray-700 placeholder-gray-400 focus:outline-none resize-none px-3 py-2 max-h-32" placeholder="Digite sua pergunta (Ex: Compare o P-1004 com a média populacional)..."></textarea>
+                    <button id="assistente-send-btn" class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center shrink-0 hover:bg-primary-light transition-colors shadow-md disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i data-lucide="send" class="w-5 h-5 ml-0.5"></i>
+                    </button>
+                </div>
+                <div class="text-center mt-2">
+                    <span class="text-[10px] text-gray-400 uppercase tracking-widest font-semibold">Respostas geradas por IA podem conter imprecisões clínicas.</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Ferramentas Area (Hidden by default) -->
+        <div id="assistente-ferramentas-area" class="hidden flex-1 flex flex-col overflow-hidden relative animate-fade-in">
+            <div class="mb-4">
+                <h2 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                    <i data-lucide="sparkles" class="w-5 h-5"></i> Ferramentas disponíveis
+                </h2>
+                <p class="text-sm text-gray-500 mt-1">O assistente pode executar as seguintes análises estruturadas na base clínica.</p>
+            </div>
+            
+            <div class="space-y-4 overflow-y-auto pr-2 pb-4" id="ferramentas-list">
+                
+                <!-- Card 1 -->
+                <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+                    <div class="flex items-start gap-3 mb-2">
+                        <i data-lucide="book-open" class="w-5 h-5 text-gray-700 mt-0.5"></i>
+                        <div>
+                            <h3 class="font-bold text-gray-900 text-base">Evolução do Desempenho 30sSTS</h3>
+                            <p class="text-sm text-gray-500 mt-1">Calcula a evolução de desempenho (tempo e repetições) de um paciente num intervalo de datas. Compara resultados atuais com testes anteriores.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 mt-4 text-xs">
+                        <span class="text-gray-400">Requer:</span>
+                        <span class="px-2 py-1 bg-gray-50 border border-gray-200 rounded font-mono text-gray-700">Data inicial</span>
+                        <span class="px-2 py-1 bg-gray-50 border border-gray-200 rounded font-mono text-gray-700">Data final</span>
+                        <span class="px-2 py-1 bg-gray-50 border border-gray-200 rounded font-mono text-gray-700">Paciente</span>
+                    </div>
+                </div>
+                
+                <!-- Card 2 -->
+                <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+                    <div class="flex items-start gap-3 mb-2">
+                        <i data-lucide="book-open" class="w-5 h-5 text-gray-700 mt-0.5"></i>
+                        <div>
+                            <h3 class="font-bold text-gray-900 text-base">Análise Populacional</h3>
+                            <p class="text-sm text-gray-500 mt-1">Mostra a distribuição populacional de variáveis biomecânicas. Inclui divisões por quartis, sexo, faixas etárias e riscos clínicos, gerando gráficos sintéticos.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 mt-4 text-xs">
+                        <span class="text-gray-400">Requer:</span>
+                        <span class="px-2 py-1 bg-gray-50 border border-gray-200 rounded font-mono text-gray-700">Métrica alvo</span>
+                        <span class="px-2 py-1 bg-gray-50 border border-gray-200 rounded font-mono text-gray-700">Filtros</span>
+                    </div>
+                </div>
+                
+                <!-- Card 3 -->
+                <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+                    <div class="flex items-start gap-3 mb-2">
+                        <i data-lucide="book-open" class="w-5 h-5 text-gray-700 mt-0.5"></i>
+                        <div>
+                            <h3 class="font-bold text-gray-900 text-base">Relatório de Assimetria de Marcha</h3>
+                            <p class="text-sm text-gray-500 mt-1">Relatório agrupado de discrepâncias na fase de apoio e balanço entre os membros inferiores. Analisa o risco imediato com base na estabilidade da passada.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 mt-4 text-xs">
+                        <span class="text-gray-400">Requer:</span>
+                        <span class="px-2 py-1 bg-gray-50 border border-gray-200 rounded font-mono text-gray-700">Teste TUG</span>
+                        <span class="px-2 py-1 bg-gray-50 border border-gray-200 rounded font-mono text-gray-700">Paciente</span>
+                    </div>
+                </div>
+                
+                <!-- Card 4 -->
+                <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+                    <div class="flex items-start gap-3 mb-2">
+                        <i data-lucide="book-open" class="w-5 h-5 text-gray-700 mt-0.5"></i>
+                        <div>
+                            <h3 class="font-bold text-gray-900 text-base">Comparativo Inter-Testes</h3>
+                            <p class="text-sm text-gray-500 mt-1">Permite comparar resultados diretos de avaliações diferentes para o mesmo indivíduo. Extrai o delta percentual de características selecionadas.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 mt-4 text-xs">
+                        <span class="text-gray-400">Requer:</span>
+                        <span class="px-2 py-1 bg-gray-50 border border-gray-200 rounded font-mono text-gray-700">ID Teste 1</span>
+                        <span class="px-2 py-1 bg-gray-50 border border-gray-200 rounded font-mono text-gray-700">ID Teste 2</span>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Styling for the typing dots animation */
+    .typing-dot {
+        animation: typing 1.4s infinite ease-in-out both;
+    }
+    .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+    
+    @keyframes typing {
+        0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
+        40% { transform: scale(1); opacity: 1; }
+    }
+    
+    /* Scrollbar minimalista para o chat e histórico */
+    #assistente-messages::-webkit-scrollbar,
+    .overflow-y-auto::-webkit-scrollbar {
+        width: 6px;
+    }
+    #assistente-messages::-webkit-scrollbar-track,
+    .overflow-y-auto::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    #assistente-messages::-webkit-scrollbar-thumb,
+    .overflow-y-auto::-webkit-scrollbar-thumb {
+        background-color: #e2e8f0;
+        border-radius: 10px;
+    }
+    #assistente-messages:hover::-webkit-scrollbar-thumb,
+    .overflow-y-auto:hover::-webkit-scrollbar-thumb {
+        background-color: #cbd5e1;
+    }
+</style>

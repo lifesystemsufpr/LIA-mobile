@@ -1,0 +1,172 @@
+<div class="animate-fade-in max-w-6xl mx-auto">
+    <!-- Header: Retornar à Base -->
+    <button data-navigate="individuos" class="text-text-muted hover:text-primary text-sm font-medium flex items-center gap-2 mb-6 transition-colors bg-white px-4 py-2 rounded-full border border-gray-200 shadow-sm w-max">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i> Retornar à Base
+    </button>
+
+    <!-- Profile Header -->
+    <div class="bg-surface rounded-2xl border border-border shadow-sm p-8 mb-8 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -z-0"></div>
+        <div class="flex flex-col md:flex-row items-start md:items-center gap-6 relative z-10">
+            <div class="w-20 h-20 rounded-full bg-primary text-white flex items-center justify-center text-3xl font-bold shadow-md shrink-0">MS</div>
+            <div>
+                <h1 class="text-3xl font-bold text-text-main mb-3">Maria Silva</h1>
+                <div class="flex flex-wrap items-center gap-4 text-text-muted text-sm font-medium">
+                    <span class="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
+                        <i data-lucide="user" class="w-4 h-4 text-primary"></i> 
+                        Feminino, 72 anos
+                    </span>
+                    <span class="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
+                        <i data-lucide="calendar" class="w-4 h-4 text-primary"></i> 
+                        Última avaliação: 25/10/2023
+                    </span>
+                    <span class="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
+                        <i data-lucide="activity" class="w-4 h-4 text-primary"></i> 
+                        5 avaliações no sistema
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Avaliações Recentes -->
+    <div class="mb-10">
+        <h2 class="text-xl font-bold text-primary mb-4 flex items-center gap-2">
+            <i data-lucide="clock" class="w-5 h-5"></i> Avaliações Recentes
+        </h2>
+        
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <table class="w-full text-left border-collapse text-sm">
+                <thead>
+                    <tr class="bg-gray-50 border-b border-gray-200">
+                        <th class="py-3 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider">Data</th>
+                        <th class="py-3 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider">Protocolo</th>
+                        <th class="py-3 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider">Resultado</th>
+                        <th class="py-3 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider">Status da análise</th>
+                        <th class="py-3 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Ação</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    <tr class="hover:bg-blue-50/30 transition-colors">
+                        <td class="py-4 px-6 font-medium text-text-main">25/10/2023</td>
+                        <td class="py-4 px-6 font-bold text-primary">30sSTS</td>
+                        <td class="py-4 px-6 font-bold text-text-main">14 rep</td>
+                        <td class="py-4 px-6"><span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md border border-gray-200 font-medium">Processado</span></td>
+                        <td class="py-4 px-6 text-right"><button class="text-secondary hover:underline font-bold text-xs" onclick="App.navigate('analise-30ssts')">VER ANÁLISE</button></td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Resultados por Protocolo -->
+    <div class="mb-10">
+        <h2 class="text-xl font-bold text-primary mb-4 flex items-center gap-2">
+            <i data-lucide="bar-chart-2" class="w-5 h-5"></i> Resultados por Protocolo
+        </h2>
+
+        <!-- Tabs de Protocolo -->
+        <nav class="flex gap-2 bg-gray-200/50 p-1 rounded-xl w-max mb-6">
+            <button class="px-6 py-2 rounded-lg text-sm font-bold bg-white text-primary shadow-sm transition-all border border-gray-200 cursor-pointer">30sSTS</button>
+            <button class="px-6 py-2 rounded-lg text-sm font-medium text-gray-400 transition-all border border-transparent cursor-not-allowed">TUG</button>
+            <button class="px-6 py-2 rounded-lg text-sm font-medium text-gray-400 transition-all border border-transparent cursor-not-allowed">5TSTS</button>
+            <button class="px-6 py-2 rounded-lg text-sm font-medium text-gray-400 transition-all border border-transparent cursor-not-allowed">UTT</button>
+            <button class="px-6 py-2 rounded-lg text-sm font-medium text-gray-400 transition-all border border-transparent cursor-not-allowed">2MST</button>
+        </nav>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Seletor e Gráfico -->
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="flex gap-3 items-center">
+                            <label class="text-sm font-bold text-text-muted uppercase">Característica:</label>
+                            <select id="feature-selector" class="border border-gray-300 rounded-lg px-3 py-1.5 text-sm text-text-main focus:outline-none focus:border-primary bg-white shadow-sm font-medium">
+                                <option value="reps">Repetições</option>
+                                <option value="time">Tempo de transferência</option>
+                                <option value="amp">Amplitude angular do tronco</option>
+                                <option value="vel">Velocidade angular</option>
+                                <option value="var_temp">Variabilidade temporal</option>
+                                <option value="var_ciclo">Variação do tempo de ciclo</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="h-64 w-full relative">
+                        <canvas id="evolutionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dados Quantitativos -->
+            <div class="space-y-4">
+                <div class="bg-surface rounded-xl border border-border shadow-sm p-5">
+                    <p class="text-xs text-text-muted font-bold uppercase mb-1">Primeira avaliação</p>
+                    <p class="text-2xl font-black text-text-main">10 <span class="text-sm font-medium text-text-muted font-normal">repetições</span></p>
+                    <p class="text-xs text-gray-500 mt-1">15/05/2023</p>
+                </div>
+                
+                <div class="bg-surface rounded-xl border border-border shadow-sm p-5">
+                    <p class="text-xs text-text-muted font-bold uppercase mb-1">Última avaliação</p>
+                    <p class="text-2xl font-black text-text-main">14 <span class="text-sm font-medium text-text-muted font-normal">repetições</span></p>
+                    <p class="text-xs text-gray-500 mt-1">25/10/2023</p>
+                </div>
+                
+                <div class="bg-surface rounded-xl border border-border shadow-sm p-5">
+                    <p class="text-xs text-text-muted font-bold uppercase mb-1">Média Histórica</p>
+                    <p class="text-2xl font-black text-text-main">12,8 <span class="text-sm font-medium text-text-muted font-normal">repetições</span></p>
+                </div>
+                
+                <div class="bg-surface rounded-xl border border-border shadow-sm p-5">
+                    <p class="text-xs text-text-muted font-bold uppercase mb-1">Número de avaliações</p>
+                    <p class="text-2xl font-black text-text-main">5</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Histórico de Avaliações -->
+    <div class="mb-10">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold text-primary flex items-center gap-2">
+                <i data-lucide="list" class="w-5 h-5"></i> Histórico de Avaliações
+            </h2>
+            <button data-navigate="comparacao" class="bg-primary hover:bg-primary-light text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2 text-sm transition-colors shadow-sm">
+                <i data-lucide="git-compare" class="w-4 h-4"></i>
+                Comparar avaliações
+            </button>
+        </div>
+        <div class="bg-surface rounded-xl border border-border shadow-sm overflow-hidden">
+            <table class="w-full text-left border-collapse text-sm">
+                <thead>
+                    <tr class="bg-gray-50 border-b border-border">
+                        <th class="py-4 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider">Data</th>
+                        <th class="py-4 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider">Protocolo</th>
+                        <th class="py-4 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider">Resultado Principal</th>
+                        <th class="py-4 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider">Status da análise</th>
+                        <th class="py-4 px-6"></th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    <tr class="hover:bg-blue-50/50 transition-colors">
+                        <td class="py-4 px-6 font-medium text-text-main">25/10/2023</td>
+                        <td class="py-4 px-6 font-bold text-primary">30sSTS</td>
+                        <td class="py-4 px-6 font-bold text-text-main text-base">14 rep</td>
+                        <td class="py-4 px-6"><span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md border border-gray-200 font-medium">Processado</span></td>
+                        <td class="py-4 px-6 text-right"><button class="text-secondary hover:underline font-bold text-xs uppercase" onclick="App.navigate('analise-30ssts')">Ver Análise</button></td>
+                    </tr>
+
+                    <tr class="hover:bg-blue-50/50 transition-colors">
+                        <td class="py-4 px-6 font-medium text-text-main">15/10/2023</td>
+                        <td class="py-4 px-6 font-bold text-primary">30sSTS</td>
+                        <td class="py-4 px-6 font-bold text-text-main text-base">12 rep</td>
+                        <td class="py-4 px-6"><span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md border border-gray-200 font-medium">Processado</span></td>
+                        <td class="py-4 px-6 text-right"><button class="text-secondary hover:underline font-bold text-xs uppercase" onclick="App.navigate('analise-30ssts')">Ver Análise</button></td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

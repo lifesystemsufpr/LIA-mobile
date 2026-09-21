@@ -1,0 +1,64 @@
+<div class="animate-fade-in max-w-6xl mx-auto">
+            <div class="flex justify-between items-end mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold text-primary mb-2">Indivíduos</h1>
+                    <p class="text-text-muted text-base">Selecione um participante para análise longitudinal detalhada.
+                    </p>
+                </div>
+                <button
+                    class="bg-gradient-to-r from-primary to-primary-light hover:from-primary-light hover:to-primary text-white px-5 py-2.5 rounded-lg font-medium text-sm shadow-md transition-all flex items-center gap-2">
+                    <i data-lucide="plus" class="w-4 h-4"></i> Novo Indivíduo
+                </button>
+            </div>
+
+            <div class="bg-surface rounded-xl border border-border shadow-sm overflow-hidden flex flex-col">
+                <!-- Toolbar -->
+                <div class="p-5 border-b border-border flex flex-wrap gap-4 justify-between items-center bg-gray-50/80">
+                    <div class="relative w-full max-w-md">
+                        <i data-lucide="search"
+                            class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" placeholder="Buscar por nome, ID Clínico ou CPF..."
+                            class="w-full pl-10 pr-4 py-2.5 text-sm border border-border rounded-lg focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20 transition-all">
+                    </div>
+                    <div class="flex gap-3">
+                        <select
+                            class="text-sm border border-border rounded-lg px-4 py-2.5 text-text-main focus:outline-none focus:border-secondary bg-white">
+                            <option>Faixa Etária</option>
+                            <option>60-70 anos</option>
+                            <option>71-80 anos</option>
+                            <option>81+ anos</option>
+                        </select>
+                        <select
+                            class="text-sm border border-border rounded-lg px-4 py-2.5 text-text-main focus:outline-none focus:border-secondary bg-white">
+                            <option>Sexo</option>
+                            <option>Masculino</option>
+                            <option>Feminino</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-white border-b border-border">
+                                <th class="py-4 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider">CPF</th>
+                                <th class="py-4 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                    Participante</th>
+                                <th class="py-4 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider">Idade
+                                </th>
+                                <th class="py-4 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider">Sexo</th>
+                                <th
+                                    class="py-4 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider text-center">
+                                    Nº Avaliações</th>
+
+                                <th class="py-4 px-6"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="individuos-table-body" class="divide-y divide-gray-100">
+                            <!-- JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>

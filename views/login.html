@@ -1,0 +1,177 @@
+<div class="flex h-[100dvh] w-full bg-white animate-fade-in flex-col md:flex-row overflow-hidden relative z-50">
+    
+    <!-- Lado Esquerdo - Visual Institucional (55%) -->
+    <div class="hidden md:flex w-[55%] bg-primary-dark relative flex-col justify-between overflow-hidden">
+        <!-- Background Pattern / Waveforms -->
+        <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-40">
+            <!-- Grid dots -->
+            <div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0); background-size: 32px 32px;"></div>
+            
+            <!-- Abstract Signal Waveform -->
+            <svg class="absolute bottom-0 left-0 w-full h-[60%] translate-y-20" viewBox="0 0 1000 400" preserveAspectRatio="none">
+                <!-- Grid Lines -->
+                <line x1="0" y1="100" x2="1000" y2="100" stroke="rgba(255,255,255,0.03)" stroke-width="1" />
+                <line x1="0" y1="200" x2="1000" y2="200" stroke="rgba(255,255,255,0.03)" stroke-width="1" />
+                <line x1="0" y1="300" x2="1000" y2="300" stroke="rgba(255,255,255,0.03)" stroke-width="1" />
+                
+                <!-- Gyroscope/Accel Waves -->
+                <path d="M0,350 Q100,350 150,250 T300,100 T450,300 T600,150 T750,200 T900,100 T1000,150" fill="none" stroke="#48CAE4" stroke-width="2" stroke-opacity="0.1" stroke-dasharray="10 5"/>
+                <path d="M0,250 C100,200 150,350 250,300 S350,150 450,200 S550,50 650,150 S750,350 850,250 S950,200 1000,150" fill="none" stroke="#00B4D8" stroke-width="3" stroke-opacity="0.5"/>
+                
+                <!-- Data Nodes -->
+                <circle cx="250" cy="300" r="4" fill="#00B4D8" class="animate-pulse"/>
+                <circle cx="450" cy="200" r="4" fill="#00B4D8" class="animate-pulse" style="animation-delay: 0.5s"/>
+                <circle cx="650" cy="150" r="4" fill="#00B4D8" class="animate-pulse" style="animation-delay: 1s"/>
+                <circle cx="850" cy="250" r="4" fill="#00B4D8" class="animate-pulse" style="animation-delay: 1.5s"/>
+                
+                <!-- Area Fill -->
+                <path d="M0,250 C100,200 150,350 250,300 S350,150 450,200 S550,50 650,150 S750,350 850,250 S950,200 1000,150 L1000,400 L0,400 Z" fill="url(#grad)" opacity="0.1"/>
+                <defs>
+                    <linearGradient id="grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#00B4D8"/>
+                        <stop offset="100%" stop-color="transparent"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+        </div>
+
+        <!-- Top Content -->
+        <div class="relative z-10 p-12 lg:p-20 flex flex-col items-center justify-center h-full">
+            <div class="flex items-center justify-center mb-8">
+                <img src="assets/img/logo.png" alt="LIA Logo" class="h-40 md:h-64 object-contain brightness-0 invert">
+            </div>
+            
+
+        </div>
+    </div>
+
+    <!-- Lado Direito - Formulário (45%) -->
+    <div class="w-full md:w-[45%] bg-white flex flex-col justify-center items-center relative p-6 md:p-12 overflow-y-auto">
+        
+        <!-- Mobile Header (Only visible on small screens) -->
+        <div class="md:hidden w-full max-w-sm mb-12 flex items-center justify-center">
+            <img src="assets/img/logo.png" alt="LIA Logo" class="h-40 object-contain">
+        </div>
+
+        <div class="w-full max-w-[400px] mt-6 md:mt-12">
+            
+            <!-- Form Header -->
+            <div class="mb-10 text-center md:text-left">
+                <h2 class="text-[32px] font-bold text-gray-900 mb-2 tracking-tight">Entrar na plataforma</h2>
+                <p class="text-[#667085] text-[16px]">Acesse sua conta para continuar.</p>
+            </div>
+
+            <!-- Formulário -->
+            <form id="login-form" class="space-y-6" onsubmit="event.preventDefault();">
+                
+                <!-- Erro Global (Invisível por padrão) -->
+                <div id="login-error-alert" class="hidden bg-red-50 border border-red-200 text-red-600 rounded-xl p-4 text-sm flex gap-3 items-start">
+                    <i data-lucide="alert-circle" class="w-5 h-5 shrink-0 mt-0.5"></i>
+                    <div>
+                        <p class="font-semibold">Erro ao acessar</p>
+                        <p id="login-error-msg" class="text-red-500/90 text-xs mt-0.5">E-mail ou senha inválidos.</p>
+                    </div>
+                </div>
+
+                <!-- Campo E-mail -->
+                <div>
+                    <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">E-mail</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i data-lucide="mail" class="h-5 w-5 text-gray-400"></i>
+                        </div>
+                        <input type="email" id="email" name="email" autocomplete="email" required
+                            class="block w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-[15px] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all focus:bg-white"
+                            placeholder="seu@email.com">
+                    </div>
+                </div>
+
+                <!-- Campo Senha -->
+                <div>
+                    <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">Senha</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i data-lucide="lock" class="h-5 w-5 text-gray-400"></i>
+                        </div>
+                        <input type="password" id="password" name="password" autocomplete="current-password" required
+                            class="block w-full pl-11 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl text-[15px] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all focus:bg-white"
+                            placeholder="Digite sua senha">
+                        <!-- Toggle Password -->
+                        <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none" aria-label="Mostrar senha">
+                            <i data-lucide="eye" id="toggle-password-icon" class="h-5 w-5 transition-colors"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Ações Complementares -->
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input id="remember-me" name="remember-me" type="checkbox"
+                            class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded cursor-pointer">
+                        <label for="remember-me" class="ml-2 block text-sm text-gray-600 cursor-pointer select-none">
+                            Lembrar de mim
+                        </label>
+                    </div>
+
+                    <div class="text-sm">
+                        <button type="button" id="forgot-password-link" class="font-semibold text-primary hover:text-primary-light transition-colors">
+                            Esqueci minha senha
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Botão Principal -->
+                <div>
+                    <button type="submit" id="login-btn"
+                        class="w-full flex justify-center items-center py-3.5 px-4 border border-transparent rounded-xl shadow-sm text-[16px] font-semibold text-white bg-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all disabled:opacity-70 disabled:cursor-not-allowed">
+                        <span id="login-btn-text">Entrar</span>
+                        <i data-lucide="loader-2" id="login-btn-spinner" class="h-5 w-5 ml-2 animate-spin hidden"></i>
+                    </button>
+                </div>
+            </form>
+            
+            <!-- Formulário de Recuperação (Invisível por padrão) -->
+            <form id="recovery-form" class="hidden space-y-6 animate-fade-in" onsubmit="event.preventDefault();">
+                <!-- Back button -->
+                <button type="button" id="back-to-login" class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-800 transition-colors mb-2 group">
+                    <i data-lucide="arrow-left" class="w-4 h-4 mr-1 group-hover:-translate-x-1 transition-transform"></i> Voltar ao login
+                </button>
+                
+                <div class="mb-8">
+                    <h2 class="text-[28px] font-bold text-gray-900 mb-2 tracking-tight">Recuperar senha</h2>
+                    <p class="text-gray-500 text-[15px] leading-relaxed">Informe seu e-mail para receber as instruções de recuperação.</p>
+                </div>
+                
+                <!-- Feedback de Sucesso (Invisível por padrão) -->
+                <div id="recovery-success-alert" class="hidden bg-green-50 border border-green-200 text-green-700 rounded-xl p-4 text-sm flex gap-3 items-start mb-6">
+                    <i data-lucide="check-circle-2" class="w-5 h-5 shrink-0 mt-0.5"></i>
+                    <p class="leading-relaxed">Se o e-mail estiver cadastrado, você receberá as instruções para redefinir sua senha.</p>
+                </div>
+
+                <div id="recovery-input-group">
+                    <label for="recovery-email" class="block text-sm font-semibold text-gray-700 mb-2">E-mail</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i data-lucide="mail" class="h-5 w-5 text-gray-400"></i>
+                        </div>
+                        <input type="email" id="recovery-email" required
+                            class="block w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-[15px] text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all focus:bg-white"
+                            placeholder="seu@email.com">
+                    </div>
+                </div>
+                
+                <button type="submit" id="recovery-btn"
+                    class="w-full flex justify-center items-center py-3.5 px-4 border border-transparent rounded-xl shadow-sm text-[16px] font-semibold text-white bg-primary hover:bg-primary-light transition-all disabled:opacity-70 disabled:cursor-not-allowed mt-6">
+                    <span id="recovery-btn-text">Enviar instruções</span>
+                    <i data-lucide="loader-2" id="recovery-btn-spinner" class="h-5 w-5 ml-2 animate-spin hidden"></i>
+                </button>
+            </form>
+        </div>
+        
+        <!-- Rodapé Formulário -->
+        <div class="absolute bottom-8 w-full text-center left-0 px-6">
+            <p class="text-xs font-medium text-[#667085] tracking-wide">LIA · Plataforma de análise de mobilidade funcional</p>
+            <p class="text-[10px] text-gray-400 opacity-60 mt-1 uppercase tracking-wider">© Life Systems</p>
+        </div>
+    </div>
+</div>

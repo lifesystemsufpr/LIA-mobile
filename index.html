@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIA - Longevity Intelligence & Assessment</title>
+
+    <!-- Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        primary: '#142B5B', // Deep Navy Blue
+                        'primary-dark': '#0A1931', // Darker Navy for sidebar
+                        'primary-light': '#1A5092', // Lighter Blue
+                        secondary: '#00B3B0', // Teal/Cyan
+                        'secondary-light': '#5CE1E6',
+                        background: '#F1F5F9', // Slightly darker slate background for contrast
+                        surface: '#FFFFFF',
+                        'text-main': '#1E293B',
+                        'text-muted': '#64748B',
+                        success: '#10B981',
+                        warning: '#F59E0B',
+                        danger: '#EF4444',
+                        border: '#E2E8F0'
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'card': '0 2px 12px 0 rgba(0,0,0,0.03)',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.3s ease-out',
+                        'slide-up': 'slideUp 0.4s ease-out',
+                        'typing': 'typing 1.4s infinite ease-in-out both'
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        typing: {
+                            '0%, 80%, 100%': { transform: 'scale(0)' },
+                            '40%': { transform: 'scale(1)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .typing-dot {
+            animation: typing 1.4s infinite ease-in-out both;
+        }
+    </style>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Hammer.js (required by chartjs-plugin-zoom) -->
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
+    <!-- Chart.js Zoom Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+    <!-- Chart.js Annotation Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.1.0/dist/chartjs-plugin-annotation.min.js"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body class="bg-background text-text-main font-sans antialiased">
+    <div class="flex flex-col h-screen overflow-hidden">
+
+        <!-- GLOBAL HEADER -->
+        <header class="h-20 bg-surface border-b border-border flex items-center justify-between px-8 z-30 flex-shrink-0 shadow-sm relative w-full">
+            <!-- Color bar top -->
+            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-primary-light to-secondary"></div>
+
+            <!-- Logo -->
+            <div class="flex items-center gap-6 mr-8">
+                <img src="assets/img/logo.png" alt="LIA Logo" id="logo-full" class="h-12 object-contain self-start drop-shadow-sm transition-all duration-300">
+            </div>
+
+            <!-- Global Search -->
+            <div class="flex-1 max-w-2xl flex items-center gap-4">
+                <div class="relative group flex-1">
+                    <i data-lucide="search" class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors"></i>
+                    <input type="text" placeholder="Buscar pacientes, IDs clínicos ou Avaliações..." 
+                           class="w-full bg-gray-50 border border-gray-200 text-sm rounded-full pl-12 pr-4 py-2.5 focus:outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-medium text-text-main placeholder:text-gray-400">
+                    <div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                        <kbd class="hidden sm:inline-block bg-white border border-gray-200 rounded px-2 py-1 text-[10px] font-mono text-gray-400 font-bold shadow-sm">Ctrl</kbd>
+                        <kbd class="hidden sm:inline-block bg-white border border-gray-200 rounded px-2 py-1 text-[10px] font-mono text-gray-400 font-bold shadow-sm">K</kbd>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="flex items-center gap-4 ml-6">
+                <button class="relative w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-text-muted hover:text-primary hover:bg-blue-50 hover:border-blue-100 transition-all shadow-sm" title="Notificações">
+                    <i data-lucide="bell" class="w-5 h-5"></i>
+                    <span class="absolute top-0 right-0 w-3 h-3 rounded-full bg-danger border-2 border-white"></span>
+                </button>
+                <button class="relative w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-text-muted hover:text-primary hover:bg-blue-50 hover:border-blue-100 transition-all shadow-sm" title="Configurações">
+                    <i data-lucide="settings" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- BODY WRAPPER -->
+        <div class="flex flex-1 overflow-hidden relative">
+
+            <!-- SIDEBAR -->
+            <aside id="sidebar" class="w-64 bg-primary-dark text-gray-300 flex flex-col flex-shrink-0 z-20 shadow-xl transition-all duration-300 overflow-x-hidden relative">
+
+            <!-- Navigation -->
+            <nav class="flex-1 overflow-y-auto py-6 px-3 space-y-1 no-scrollbar">
+                
+                <a href="#" data-route="dashboard" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors bg-primary text-white border-l-4 border-secondary shadow-md overflow-hidden">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5 text-gray-400 flex-shrink-0"></i> <span class="sidebar-text font-semibold whitespace-nowrap">Visão geral</span>
+                </a>
+                <a href="#" data-route="individuos" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-white/5 hover:text-white border-l-4 border-transparent overflow-hidden">
+                    <i data-lucide="user" class="w-5 h-5 text-gray-400 flex-shrink-0"></i> <span class="sidebar-text whitespace-nowrap">Indivíduos</span>
+                </a>
+                <a href="#" data-route="testes" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-white/5 hover:text-white border-l-4 border-transparent overflow-hidden">
+                    <i data-lucide="activity-square" class="w-5 h-5 text-gray-400 flex-shrink-0"></i> <span class="sidebar-text whitespace-nowrap">Testes</span>
+                </a>
+                <a href="#" data-route="populacoes" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-white/5 hover:text-white border-l-4 border-transparent overflow-hidden">
+                    <i data-lucide="users" class="w-5 h-5 text-gray-400 flex-shrink-0"></i> <span class="sidebar-text whitespace-nowrap">Populações</span>
+                </a>
+                
+                <a href="#" data-route="avaliacoes" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-white/5 hover:text-white border-l-4 border-transparent overflow-hidden">
+                    <i data-lucide="clipboard-list" class="w-5 h-5 text-gray-400 flex-shrink-0"></i> <span class="sidebar-text whitespace-nowrap">Avaliações</span>
+                </a>
+                
+                <a href="#" data-route="assistente" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-white/5 hover:text-white border-l-4 border-transparent overflow-hidden">
+                    <i data-lucide="bot" class="w-5 h-5 text-gray-400 flex-shrink-0"></i> <span class="sidebar-text whitespace-nowrap">Assistente de IA</span>
+                </a>
+                
+            </nav>
+
+            <!-- Footer Profile -->
+            <div class="p-4 bg-black/20 flex justify-center border-t border-white/5">
+                <div class="flex items-center gap-3 w-full">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-secondary to-primary flex items-center justify-center font-bold text-sm text-white shadow-lg flex-shrink-0">
+                        RL
+                    </div>
+                    <div class="flex-1 min-w-0 sidebar-text overflow-hidden">
+                        <p class="text-sm font-semibold text-white truncate">Dr. Roberto Lima</p>
+                        <p class="text-xs text-secondary-light truncate">Pesquisador</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT WRAPPER -->
+        <div class="flex-1 flex flex-col overflow-hidden bg-background relative">
+
+            <!-- Main Content Area -->
+            <main id="main-content" class="flex-1 overflow-y-auto p-8 lg:p-10 relative scroll-smooth bg-background">
+                <!-- Content will be injected here via JS -->
+            </main>
+
+            <!-- Global AI Assistant FAB -->
+            <div id="ai-fab-container" class="absolute bottom-6 left-1/2 -translate-x-1/2 z-50 hidden">
+                <div class="relative flex items-center justify-center">
+                    
+                    <!-- Collapsed State -->
+                    <div id="ai-fab-collapsed" class="absolute bg-white/80 backdrop-blur-sm border border-gray-200 shadow-md rounded-full px-8 py-2 flex items-center justify-center cursor-pointer hover:shadow-lg transition-all duration-300 w-32 h-10 overflow-hidden z-10 peer">
+                        <i data-lucide="sparkles" class="w-5 h-5 text-primary"></i>
+                    </div>
+                    
+                    <!-- Expanded State (Input Box) -->
+                    <div id="ai-fab-expanded" class="opacity-0 scale-95 pointer-events-none peer-hover:opacity-100 peer-hover:scale-100 peer-hover:pointer-events-auto hover:opacity-100 hover:scale-100 hover:pointer-events-auto focus-within:opacity-100 focus-within:scale-100 focus-within:pointer-events-auto bg-white border border-gray-200 shadow-2xl rounded-full p-1.5 flex items-center gap-1 transition-all duration-300 w-[600px] h-14 z-20">
+                        <button class="w-10 h-10 rounded-full flex items-center justify-center text-gray-400 shrink-0 ml-2 cursor-default">
+                            <i data-lucide="sparkles" class="w-5 h-5"></i>
+                        </button>
+                        <input type="text" id="ai-fab-input" placeholder="Necessita de ajuda ?" class="flex-1 bg-transparent border-none focus:outline-none text-sm text-gray-700 placeholder-gray-400 py-2 px-2">
+                        <button id="ai-fab-send-btn" class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 hover:bg-primary hover:text-white transition-colors shrink-0">
+                            <i data-lucide="arrow-up" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+    <!-- ==========================================
+         TEMPLATES (SPA VIEWS)
+         ========================================== -->
+
+    <!-- 1. DASHBOARD -->
+    
+
+    <!-- 2. INDIVÃDUOS (Listagem) -->
+    
+
+    <!-- 3. INDIVÃDUO - ANÃLISE LONGITUDINAL -->
+    
+
+    <!-- 4. TESTES (Catálogo) -->
+    
+
+    <!-- 5. TESTE - DETALHE -->
+    
+
+    <!-- 6. POPULAÇÕES -->
+    
+
+    <!-- 7. AVALIAÇÕES (Histórico Geral) -->
+    
+
+    <!-- 8. MOVIMENTO (AnÃ¡lise Cinemática Pura) -->
+    
+
+    <!-- 9. DADOS -->
+    
+
+    <!-- 10. CONFIGURAÇÕES -->
+    
+
+    <!-- 5. ANÃLISE ESPECÃFICA DO 30sSTS -->
+    
+
+    <!-- Right AI Assistant Drawer -->
+    <div id="ai-drawer" class="fixed inset-y-0 right-0 w-96 bg-surface shadow-2xl transform translate-x-full transition-transform duration-300 z-50 flex flex-col border-l border-border">
+        <!-- Header -->
+        <div class="h-20 bg-white border-b border-border flex items-center justify-between px-6 shrink-0 relative">
+            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-secondary"></div>
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <i data-lucide="bot" class="w-5 h-5 text-primary"></i>
+                </div>
+                <div>
+                    <h2 class="text-base font-bold text-primary">Assistente LIA</h2>
+                </div>
+            </div>
+            <button id="ai-drawer-close" class="text-gray-400 hover:text-gray-700 transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+        
+        <!-- Chat Area -->
+        <div id="ai-drawer-messages" class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50/50">
+            <!-- Initial Message -->
+            <div class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0 mt-1 shadow-sm">
+                    <i data-lucide="sparkles" class="w-4 h-4 text-white"></i>
+                </div>
+                <div class="bg-white border border-gray-200 rounded-2xl rounded-tl-sm p-3 text-sm text-gray-700 shadow-sm max-w-[85%]">
+                    <p>Olá! Em que posso ajudar com a sua análise?</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="p-4 bg-white border-t border-border shrink-0">
+            <div class="relative flex items-end gap-2 bg-gray-50 rounded-xl border border-gray-200 p-2 focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all">
+                <textarea id="ai-drawer-input" rows="1" class="w-full bg-transparent border-none text-sm text-gray-700 placeholder-gray-400 focus:outline-none resize-none px-2 py-1 max-h-32" placeholder="Digite sua pergunta..."></textarea>
+                <button id="ai-drawer-send-btn" class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center shrink-0 hover:bg-primary-light transition-colors shadow-sm disabled:opacity-50">
+                    <i data-lucide="send" class="w-4 h-4 ml-0.5"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Drawer Overlay -->
+    <div id="ai-drawer-overlay" class="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 hidden opacity-0 transition-opacity duration-300"></div>
+
+    <!-- Scripts -->
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/analytics.js"></script>
+    <script src="assets/js/charts.js"></script>
+    <script src="assets/js/charts_30ssts.js"></script>
+    <script src="assets/js/charts_populacao.js"></script>
+    <script src="assets/js/assistente.js"></script>
+    <script src="assets/js/app.js"></script>
+</body>
+
+</html>

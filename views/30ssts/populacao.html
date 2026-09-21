@@ -1,0 +1,229 @@
+<div class="animate-fade-in max-w-6xl mx-auto pb-12">
+    
+    <!-- HEADER COMPACTO -->
+    <div class="flex justify-between items-end mb-6">
+        <div>
+            <button data-navigate="testes" class="text-text-muted hover:text-primary text-xs font-bold uppercase tracking-wider mb-2 flex items-center gap-1 transition-colors">
+                <i data-lucide="chevron-left" class="w-4 h-4"></i> Catálogo
+            </button>
+            <h1 class="text-2xl font-black text-primary leading-none">Análise de Avaliações</h1>
+            <p class="text-sm font-medium text-gray-400 mt-1">30-Second Sit-to-Stand Test</p>
+        </div>
+        <div class="text-right">
+            <p class="text-lg font-bold text-secondary" id="pop-total-evals">-- avaliações</p>
+            <p class="text-sm font-medium text-gray-500" id="pop-total-parts">-- participantes</p>
+        </div>
+    </div>
+
+    <!-- SEÇÃO DE FILTROS -->
+    <div class="bg-surface rounded-xl border border-border shadow-sm p-5 mb-8">
+        <h2 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">População Analisada</h2>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+            <div>
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Período</label>
+                <select id="filter-period" class="w-full bg-gray-50 border border-gray-200 text-sm rounded-lg p-2 focus:ring-primary focus:border-primary text-gray-700">
+                    <option value="all">Todos</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Faixa Etária</label>
+                <select id="filter-age" class="w-full bg-gray-50 border border-gray-200 text-sm rounded-lg p-2 focus:ring-primary focus:border-primary text-gray-700">
+                    <option value="all">Todas</option>
+                    <option value="60-69">60–69 anos</option>
+                    <option value="70-79">70–79 anos</option>
+                    <option value="80+">80+ anos</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Sexo</label>
+                <select id="filter-sex" class="w-full bg-gray-50 border border-gray-200 text-sm rounded-lg p-2 focus:ring-primary focus:border-primary text-gray-700">
+                    <option value="all">Todos</option>
+                    <option value="F">Feminino</option>
+                    <option value="M">Masculino</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Unidade</label>
+                <select id="filter-unit" class="w-full bg-gray-50 border border-gray-200 text-sm rounded-lg p-2 focus:ring-primary focus:border-primary text-gray-700">
+                    <option value="all">Todas</option>
+                    <option value="U1">Unidade Central</option>
+                    <option value="U2">Unidade Norte</option>
+                </select>
+            </div>
+        </div>
+        <div class="bg-primary/5 rounded-lg p-3 flex flex-col md:flex-row justify-between items-center border border-primary/10">
+            <p class="text-sm font-semibold text-primary" id="pop-active-filters-text">Todas as idades · Ambos os sexos · Todos os anos</p>
+            <div class="text-xs font-bold text-gray-600 mt-2 md:mt-0">
+                <span id="pop-filtered-evals">n = -- avaliações</span>
+                <span class="mx-2 text-gray-300">|</span>
+                <span id="pop-filtered-parts">n = -- participantes</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <!-- DISTRIBUIÇÃO DO NÚMERO DE REPETIÇÕES -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex flex-col">
+            <h2 class="text-base font-bold text-text-main mb-6 flex items-center gap-2">
+                <i data-lucide="bar-chart-2" class="w-5 h-5 text-primary"></i> Distribuição do Número de Repetições
+            </h2>
+            <div class="flex-grow relative h-64 w-full">
+                <canvas id="popRepetitionsChart"></canvas>
+            </div>
+            <div class="mt-4 flex flex-wrap justify-between items-center text-xs text-gray-600 bg-gray-50 px-4 py-3 rounded-lg border border-gray-100 font-mono">
+                <span id="stat-reps-n">n = --</span>
+                <span id="stat-reps-med">Mediana = --</span>
+                <span id="stat-reps-p25">P25 = --</span>
+                <span id="stat-reps-p75">P75 = --</span>
+                <span id="stat-reps-iqr">IQR = --</span>
+            </div>
+        </div>
+
+        <!-- DISTRIBUIÇÃO SEGUNDO REFERÊNCIA NORMATIVA -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex flex-col justify-between">
+            <div>
+                <h2 class="text-base font-bold text-text-main mb-2 flex items-center gap-2">
+                    <i data-lucide="book-open" class="w-5 h-5 text-primary"></i> Distribuição segundo Referência Normativa
+                </h2>
+                <p class="text-xs text-gray-400 mb-8 font-medium">Fonte: Rikli & Jones / Senior Fitness Test</p>
+            </div>
+            
+            <div class="relative w-full h-12 mb-4">
+                <canvas id="popNormativeChart"></canvas>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-2 mt-4 text-center">
+                <div class="bg-rose-50/50 rounded p-2 border border-rose-100/50">
+                    <p class="text-[10px] font-bold text-rose-600 uppercase">Abaixo da média</p>
+                    <p class="text-sm font-bold text-gray-700 mt-1" id="norm-low-count">--</p>
+                    <p class="text-xs text-gray-500" id="norm-low-pct">--%</p>
+                </div>
+                <div class="bg-amber-50/50 rounded p-2 border border-amber-100/50">
+                    <p class="text-[10px] font-bold text-amber-600 uppercase">Média</p>
+                    <p class="text-sm font-bold text-gray-700 mt-1" id="norm-avg-count">--</p>
+                    <p class="text-xs text-gray-500" id="norm-avg-pct">--%</p>
+                </div>
+                <div class="bg-emerald-50/50 rounded p-2 border border-emerald-100/50">
+                    <p class="text-[10px] font-bold text-emerald-600 uppercase">Acima da média</p>
+                    <p class="text-sm font-bold text-gray-700 mt-1" id="norm-high-count">--</p>
+                    <p class="text-xs text-gray-500" id="norm-high-pct">--%</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARACTERÍSTICAS CLÍNICO-FUNCIONAIS -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-6">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+            <h2 class="text-base font-bold text-text-main flex items-center gap-2">
+                <i data-lucide="activity" class="w-5 h-5 text-primary"></i> Características Clínico-Funcionais da População
+            </h2>
+            <div class="mt-4 md:mt-0 w-full md:w-64">
+                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Característica</label>
+                <select id="pop-feature-select" class="w-full bg-gray-50 border border-gray-200 text-sm rounded-lg p-2 focus:ring-primary focus:border-primary text-gray-700">
+                    <option value="trans">Tempo de transferência</option>
+                    <option value="trunk">Amplitude angular do tronco</option>
+                    <option value="vel">Velocidade angular média</option>
+                    <option value="var">Variabilidade temporal</option>
+                    <option value="evol">Variação do tempo de ciclo</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="md:col-span-3 h-64 relative">
+                <canvas id="popFeatureBoxplot"></canvas>
+            </div>
+            <div class="bg-gray-50 rounded-lg border border-gray-100 p-4 flex flex-col justify-center gap-2 text-sm font-mono text-gray-600">
+                <div class="flex justify-between border-b border-gray-200 pb-1"><span class="font-bold">n</span><span id="stat-feat-n">--</span></div>
+                <div class="flex justify-between border-b border-gray-200 pb-1"><span class="font-bold">Média</span><span id="stat-feat-mean">--</span></div>
+                <div class="flex justify-between border-b border-gray-200 pb-1"><span class="font-bold">Mediana</span><span id="stat-feat-med">--</span></div>
+                <div class="flex justify-between border-b border-gray-200 pb-1"><span class="font-bold">Desvio Padrão</span><span id="stat-feat-sd">--</span></div>
+                <div class="flex justify-between border-b border-gray-200 pb-1"><span class="font-bold">P25</span><span id="stat-feat-p25">--</span></div>
+                <div class="flex justify-between border-b border-gray-200 pb-1"><span class="font-bold">P75</span><span id="stat-feat-p75">--</span></div>
+                <div class="flex justify-between"><span class="font-bold">IQR</span><span id="stat-feat-iqr">--</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOXPLOTS COMPARAÇÃO E FASES -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <!-- DISTRIBUIÇÃO POR GRUPOS -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex flex-col">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-base font-bold text-text-main flex items-center gap-2">
+                    <i data-lucide="users" class="w-5 h-5 text-primary"></i> Distribuição por Grupos
+                </h2>
+                <div>
+                    <select id="pop-group-select" class="w-32 bg-gray-50 border border-gray-200 text-xs rounded-lg p-1.5 focus:ring-primary focus:border-primary text-gray-700">
+                        <option value="age">Faixa Etária</option>
+                        <option value="sex">Sexo</option>
+                    </select>
+                </div>
+            </div>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2" id="pop-group-y-label">Tempo de transferência (s)</p>
+            <div class="flex-grow relative h-64 w-full">
+                <canvas id="popGroupBoxplot"></canvas>
+            </div>
+        </div>
+
+        <!-- VELOCIDADE ANGULAR POR FASE -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex flex-col">
+            <h2 class="text-base font-bold text-text-main mb-6 flex items-center gap-2">
+                <i data-lucide="activity" class="w-5 h-5 text-primary"></i> Velocidade Angular por Fase
+            </h2>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Velocidade Angular (°/s)</p>
+            <div class="flex-grow relative h-64 w-full">
+                <canvas id="popPhaseVelBoxplot"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <!-- DISTRIBUIÇÃO DAS FASES -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex flex-col">
+            <h2 class="text-base font-bold text-text-main mb-6 flex items-center gap-2">
+                <i data-lucide="clock" class="w-5 h-5 text-primary"></i> Distribuição do Tempo das Fases
+            </h2>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Tempo (s)</p>
+            <div class="flex-grow relative h-64 w-full">
+                <canvas id="popPhaseTimeBoxplot"></canvas>
+            </div>
+        </div>
+
+        <!-- RELAÇÃO ENTRE CARACTERÍSTICAS -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex flex-col">
+            <h2 class="text-base font-bold text-text-main mb-4 flex items-center gap-2">
+                <i data-lucide="git-merge" class="w-5 h-5 text-primary"></i> Relação entre Características
+            </h2>
+            <div class="flex gap-4 mb-4">
+                <div class="w-1/2">
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Eixo X</label>
+                    <select id="pop-scatter-x" class="w-full bg-gray-50 border border-gray-200 text-xs rounded-lg p-1.5 focus:ring-primary focus:border-primary text-gray-700">
+                        <option value="reps" selected>Repetições</option>
+                        <option value="trans">Tempo de transferência</option>
+                        <option value="trunk">Amplitude angular</option>
+                        <option value="vel">Velocidade angular</option>
+                    </select>
+                </div>
+                <div class="w-1/2">
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Eixo Y</label>
+                    <select id="pop-scatter-y" class="w-full bg-gray-50 border border-gray-200 text-xs rounded-lg p-1.5 focus:ring-primary focus:border-primary text-gray-700">
+                        <option value="reps">Repetições</option>
+                        <option value="trans" selected>Tempo de transferência</option>
+                        <option value="trunk">Amplitude angular</option>
+                        <option value="vel">Velocidade angular</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex-grow relative h-64 w-full">
+                <canvas id="popScatterChart"></canvas>
+            </div>
+            <div class="mt-2 text-right text-xs font-mono text-gray-500" id="pop-scatter-stats">
+                r = -- | n = --
+            </div>
+        </div>
+    </div>
+</div>

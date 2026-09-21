@@ -1,0 +1,82 @@
+﻿<div class="animate-fade-in max-w-5xl mx-auto">
+            <button data-navigate="testes"
+                class="text-text-muted hover:text-primary text-sm font-medium flex items-center gap-2 mb-6 transition-colors bg-white px-4 py-2 rounded-full border border-gray-200 shadow-sm w-max">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> Voltar ao Catálogo
+            </button>
+
+            <div
+                class="bg-surface rounded-2xl border border-border p-8 mb-8 flex flex-col md:flex-row justify-between items-start md:items-center relative overflow-hidden shadow-sm">
+                <div class="absolute -right-10 -bottom-10 opacity-5">
+                    <i data-lucide="activity-square" class="w-64 h-64"></i>
+                </div>
+                <div class="relative z-10">
+                    <div class="flex items-center gap-3 mb-2">
+                        <h1 class="text-4xl font-black text-primary">TUG</h1>
+                        <span class="text-xl text-gray-400 font-medium">| Timed Up and Go</span>
+                    </div>
+                    <p class="text-text-main font-medium max-w-xl">Avalia mobilidade básica, equilíbrio dinâmico e risco
+                        funcional em tarefas do dia a dia.</p>
+                </div>
+                <div
+                    class="text-left md:text-right mt-6 md:mt-0 relative z-10 bg-gray-50 p-4 rounded-xl border border-gray-100">
+                    <p class="text-4xl font-black text-secondary">542</p>
+                    <p class="text-xs font-bold text-text-muted uppercase tracking-wider mt-1">Avaliações Processadas
+                    </p>
+                </div>
+            </div>
+
+            <h2 class="text-xl font-bold text-primary mb-4 flex items-center gap-2"><i data-lucide="pie-chart"
+                    class="w-5 h-5"></i> Resultados na População Geral</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
+                <div
+                    class="bg-surface rounded-xl border border-border shadow-sm p-5 text-center flex flex-col justify-center">
+                    <p class="text-[10px] text-text-muted font-bold uppercase tracking-widest mb-2">Média</p>
+                    <p class="text-3xl font-black text-primary">11.2 <span
+                            class="text-base text-gray-400 font-medium">s</span></p>
+                </div>
+                <div
+                    class="bg-surface rounded-xl border border-border shadow-sm p-5 text-center flex flex-col justify-center">
+                    <p class="text-[10px] text-text-muted font-bold uppercase tracking-widest mb-2">Mediana</p>
+                    <p class="text-3xl font-black text-primary">10.8 <span
+                            class="text-base text-gray-400 font-medium">s</span></p>
+                </div>
+                <div
+                    class="bg-surface rounded-xl border border-border shadow-sm p-5 text-center flex flex-col justify-center">
+                    <p class="text-[10px] text-text-muted font-bold uppercase tracking-widest mb-2">Desvio Padrão</p>
+                    <p class="text-3xl font-black text-text-main">± 2.4 <span
+                            class="text-base text-gray-400 font-medium">s</span></p>
+                </div>
+                <div
+                    class="bg-surface rounded-xl border border-border shadow-sm p-5 text-center flex flex-col justify-center bg-gray-50">
+                    <p class="text-[10px] text-text-muted font-bold uppercase tracking-widest mb-2">Amplitude (Min-Max)
+                    </p>
+                    <p class="text-2xl font-bold text-text-main mt-1">6.2 - 24.5 <span
+                            class="text-base text-gray-400 font-medium">s</span></p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-surface rounded-xl border border-border shadow-sm p-6">
+                    <h3 class="text-sm font-bold uppercase text-text-main mb-6">Distribuição da População (Histograma)
+                    </h3>
+                    <div class="h-64 w-full relative">
+                        <canvas id="testDistributionChart"></canvas>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border border-border shadow-sm p-8 flex flex-col justify-center items-center text-center">
+                    <div class="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center mb-6">
+                        <i data-lucide="bar-chart-horizontal" class="w-8 h-8 text-secondary"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-primary mb-3">Cruzamentos Detalhados</h3>
+                    <p class="text-sm text-text-muted max-w-sm mb-6 leading-relaxed">Para visualizar estratificações por
+                        sexo e idade, ou cruzar resultados do TUG com outros protocolos, acesse o módulo de Populações.
+                    </p>
+                    <button data-navigate="populacoes"
+                        class="bg-secondary hover:bg-secondary-light text-white font-bold py-3 px-6 rounded-lg transition-colors shadow-md">
+                        Iniciar Análise Populacional
+                    </button>
+                </div>
+            </div>
+        </div>
