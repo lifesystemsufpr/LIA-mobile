@@ -12,16 +12,23 @@ const mobileTests = {
 
     initExecution(testId) {
         this.testId = testId;
-        this.timeLeft = testId === '30sSTS' ? 30 : 15; // default examples
+        this.timeLeft = testId === '30sSTS' ? 30 : 15;
         this.reps = 0;
         this.isPaused = false;
-        
-        // Reset UI
-        document.getElementById('exec-test-name').innerText = testId;
+
+        const btn = document.getElementById('btn-exec-action');
+        if (btn) {
+            btn.innerText = 'Reiniciar';
+            btn.classList.add('bg-white/10', 'border-white/15');
+            btn.classList.remove('bg-primary', 'border-primary', 'text-white');
+        }
+
+        const testNameEl = document.getElementById('exec-test-name');
+        if (testNameEl) testNameEl.innerText = testId;
+
         this.updateTimeUI();
         this.updateRepsUI();
-        
-        // Start simulation
+
         this.startTimer();
         this.startSimulation();
     },
@@ -40,18 +47,16 @@ const mobileTests = {
     },
 
     startSimulation() {
-        // Simulate sensor detecting sit-to-stand cycles
         const states = ['Levantando...', 'Em pé', 'Sentando...', 'Sentado'];
         let stateIndex = 0;
 
         this.statusInterval = setInterval(() => {
             if (!this.isPaused) {
                 const statusEl = document.getElementById('exec-status-text');
-                if(statusEl) {
+                if (statusEl) {
                     statusEl.innerText = states[stateIndex];
                 }
-                
-                // When returning to 'Sentado' after a cycle, count a rep
+
                 if (stateIndex === 3) {
                     this.reps++;
                     this.updateRepsUI();
@@ -59,23 +64,21 @@ const mobileTests = {
 
                 stateIndex = (stateIndex + 1) % states.length;
             }
-        }, 800); // cycle speed simulation
+        }, 800);
     },
 
     updateTimeUI() {
         const el = document.getElementById('exec-timer');
-        if(el) {
-            el.innerHTML = `${this.timeLeft}<span class="text-3xl text-gray-400 ml-1">s</span>`;
+        if (el) {
+            el.innerHTML = `${this.timeLeft}<span class="text-3xl text-blue-300/40 ml-1">s</span>`;
         }
     },
 
     updateRepsUI() {
         const el = document.getElementById('exec-reps');
-        if(el) {
-            // zero pad
+        if (el) {
             el.innerText = this.reps.toString().padStart(2, '0');
-            
-            // Pop effect
+
             el.classList.remove('scale-110', 'text-white');
             void el.offsetWidth;
             el.classList.add('scale-110', 'text-white', 'transition-transform');
@@ -85,23 +88,20 @@ const mobileTests = {
         }
     },
 
-    togglePause() {
-        this.isPaused = !this.isPaused;
-        const btn = document.getElementById('btn-exec-pause');
-        if (this.isPaused) {
-            btn.innerText = 'Retomar';
-            btn.classList.add('bg-blue-600', 'border-blue-500');
-            btn.classList.remove('bg-gray-800', 'border-gray-700');
-            document.getElementById('exec-status-text').innerText = 'Pausado';
-        } else {
-            btn.innerText = 'Pausar';
-            btn.classList.remove('bg-blue-600', 'border-blue-500');
-            btn.classList.add('bg-gray-800', 'border-gray-700');
+    handleAction() {
+        const btn = document.getElementById('btn-exec-action');
+        if (!btn) return;
+
+        if (btn.innerText.trim() === 'Reiniciar') {
+            this.clearAll();
+            app.navigate('test-instructions');
+        } else if (btn.innerText.trim() === 'Finalizar') {
+            app.navigate('test-summary');
         }
     },
 
     cancel() {
-        const confirmCancel = confirm("Deseja realmente cancelar esta avaliação? Os dados não serão salvos.");
+        const confirmCancel = confirm('Deseja realmente cancelar esta avaliação? Os dados não serão salvos.');
         if (confirmCancel) {
             this.clearAll();
             app.navigate('test-selection');
@@ -110,12 +110,24 @@ const mobileTests = {
 
     finishTest() {
         this.clearAll();
-        
-        // Save to global state to show in summary
+
         app.state.testTime = app.state.test.id === '30sSTS' ? 30 : 15;
         app.state.testReps = this.reps;
+
+        const btn = document.getElementById('btn-exec-action');
+        if (btn) {
+            btn.innerText = 'Finalizar';
+            btn.classList.add('bg-primary', 'border-primary', 'text-white');
+            btn.classList.remove('bg-white/10', 'border-white/15');
+        }
         
-        app.navigate('test-summary');
+        const statusEl = document.getElementById('exec-status-text');
+        if (statusEl) statusEl.innerText = 'Teste Finalizado';
+
+        if ('speechSynthesis' in window && app.getSoftSpeech) {
+            window.speechSynthesis.cancel();
+            window.speechSynthesis.speak(app.getSoftSpeech("Teste finalizado"));
+        }
     },
 
     clearAll() {

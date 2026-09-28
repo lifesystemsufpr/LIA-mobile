@@ -1,23 +1,76 @@
-<div class="animate-fade-in max-w-6xl mx-auto">
-            <h1 class="text-3xl font-bold text-primary mb-8">Histórico de Avaliações</h1>
+<div class="animate-fade-in max-w-6xl mx-auto pb-20 relative">
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold text-primary">Histórico de Avaliações</h1>
+    </div>
 
-            <div class="bg-surface rounded-xl border border-border shadow-sm overflow-hidden">
-                <table class="w-full text-left border-collapse text-sm">
-                    <thead>
-                        <tr class="bg-gray-50 border-b border-border">
-                            <th class="py-4 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider">Data</th>
-                            <th class="py-4 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider">Participante
-                            </th>
-                            <th class="py-4 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider">Protocolo
-                            </th>
-                            <th class="py-4 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider">Status IA
-                            </th>
-                            <th class="py-4 px-6"></th>
-                        </tr>
-                    </thead>
-                    <tbody id="avaliacoes-table-body" class="divide-y divide-gray-100">
-                        <!-- JS -->
-                    </tbody>
-                </table>
+    <!-- Filtros -->
+    <div class="bg-surface rounded-xl border border-border shadow-sm p-5 mb-6 flex flex-wrap items-end gap-4">
+        <!-- Data -->
+        <div class="flex-1 min-w-[140px]">
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Data</label>
+            <input type="date" class="w-full bg-gray-50 border border-gray-200 text-sm rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-text-main">
+        </div>
+
+        <!-- Tipo de Teste -->
+        <div class="flex-1 min-w-[140px]">
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Tipo de Teste</label>
+            <select class="w-full bg-gray-50 border border-gray-200 text-sm rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-text-main">
+                <option value="">Todos os testes</option>
+                <option value="30s STS">30s STS</option>
+                <option value="TUG">TUG</option>
+                <option value="Marcha Estacionária">Marcha Estacionária</option>
+                <option value="Caminhada 6m">Caminhada 6m</option>
+            </select>
+        </div>
+
+        <!-- Participante -->
+        <div class="flex-[2] min-w-[200px]">
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Participante</label>
+            <div class="relative">
+                <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <input type="text" placeholder="Buscar por nome ou ID..." class="w-full bg-gray-50 border border-gray-200 text-sm rounded-lg pl-9 pr-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-text-main">
             </div>
         </div>
+
+        <!-- Sincronização -->
+        <div class="flex-1 min-w-[150px]">
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Sincronização</label>
+            <select class="w-full bg-gray-50 border border-gray-200 text-sm rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-text-main">
+                <option value="">Status</option>
+                <option value="Sincronizado">Sincronizado</option>
+                <option value="Pendente">Pendente</option>
+                <option value="Erro">Erro na Nuvem</option>
+            </select>
+        </div>
+        
+        <!-- Botão Limpar/Filtrar -->
+        <div class="flex items-center gap-2 min-w-[120px]">
+            <button class="w-full bg-primary hover:bg-primary-light text-white text-sm font-semibold rounded-lg px-4 py-2.5 transition-colors flex items-center justify-center gap-2 shadow-sm" title="Aplicar filtros">
+                <i data-lucide="filter" class="w-4 h-4"></i> Filtrar
+            </button>
+        </div>
+    </div>
+
+    <!-- Tabela -->
+    <div class="bg-surface rounded-xl border border-border shadow-sm overflow-hidden">
+        <table class="w-full text-left border-collapse text-sm">
+            <thead>
+                <tr class="bg-gray-50 border-b border-border">
+                    <th class="py-4 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider">Data</th>
+                    <th class="py-4 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider">Participante</th>
+                    <th class="py-4 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider">Protocolo</th>
+                    <th class="py-4 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider">Status IA</th>
+                    <th class="py-4 px-6"></th>
+                </tr>
+            </thead>
+            <tbody id="avaliacoes-table-body" class="divide-y divide-gray-100">
+                <!-- JS -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- FAB Button for Nova Avaliação -->
+    <button class="fixed bottom-8 right-8 w-14 h-14 bg-secondary hover:bg-secondary-light text-white rounded-full shadow-lg hover:shadow-xl transition-all flex items-center justify-center group z-40" onclick="app?.navigate('testes')" title="Nova Avaliação">
+        <i data-lucide="plus" class="w-6 h-6 transform group-hover:rotate-90 transition-transform duration-300"></i>
+    </button>
+</div>
