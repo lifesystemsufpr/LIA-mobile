@@ -1,0 +1,27 @@
+export const Colors = {
+  primary: '#2962FF',
+  primaryDark: '#091223',
+  primaryLight: '#5C8DFF',
+  secondary: '#5C8DFF',
+  accent: '#38B2AC',
+  success: '#22C55E',
+  warning: '#F59E0B',
+  danger: '#EF4444',
+  surface: '#FFFFFF',
+  background: '#F7F9FC',
+  textMain: '#172033',
+  textMuted: '#667085',
+  border: '#E4E7EC',
+  card: '#FFFFFF',
+  cardAlt: '#F4F7FB',
+  darkCard: 'rgba(255, 255, 255, 0.08)',
+  darkCardBorder: 'rgba(255, 255, 255, 0.15)',
+  darkText: '#FFFFFF',
+  darkTextMuted: '#93C5FD',
+  chartTeal: '#00B3B0',
+  chartNavy: '#142B5B',
+  brandGreen: '#10B981',
+  screenBackground: '#F8FAFC',
+} as const;
+
+export type ColorToken = keyof typeof Colors;
