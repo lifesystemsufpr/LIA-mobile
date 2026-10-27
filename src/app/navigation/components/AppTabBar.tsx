@@ -7,6 +7,14 @@ export const AppTabBar: React.FC<BottomTabBarProps> = ({
   descriptors,
   navigation,
 }) => {
+  const currentRoute = state.routes[state.index];
+  const currentOptions = descriptors[currentRoute.key]?.options;
+  const tabBarStyle = currentOptions?.tabBarStyle as { display?: string } | undefined;
+
+  if (tabBarStyle?.display === 'none') {
+    return null;
+  }
+
   return (
     <View style={styles.container}>
       {state.routes.map((route, index) => {

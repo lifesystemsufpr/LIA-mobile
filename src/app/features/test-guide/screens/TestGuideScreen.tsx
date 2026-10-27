@@ -14,7 +14,7 @@ import {
 import { useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChevronLeft, ChevronRight, Play } from 'lucide-react-native';
-import { Button, Protocol } from '../../../shared';
+import { Button, Colors, Protocol } from '../../../shared';
 import { StepPaginationDots } from '../components/StepPaginationDots';
 import { TutorialSlideItem } from '../components/TutorialSlideItem';
 import { TutorialStep } from '../types/tutorial.types';
@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   primaryBtn: {
-    backgroundColor: '#2962FF',
+    backgroundColor: Colors.primary,
     height: 52,
     borderRadius: 14,
   },

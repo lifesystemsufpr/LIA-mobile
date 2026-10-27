@@ -12,6 +12,7 @@ import { Assessment, EmptyState } from '../../../shared';
 import { AssessmentHistoryCard, HistoryFilterBar } from '../components';
 import { useHistory } from '../hooks/useHistory';
 import { INITIAL_ASSESSMENTS } from '../services/AssessmentsRepository';
+import { Colors } from '../../../shared';
 
 const MOCK_PARTICIPANTS_NAMES: Record<string, string> = {
   part_01: 'Manuela Silva',
@@ -72,7 +73,7 @@ export const HistoryListScreen: React.FC<HistoryListScreenProps> = ({
           <Text style={styles.subtitle}>Histórico de avaliações realizadas.</Text>
         </View>
         <View style={styles.headerIconWrapper}>
-          <ClipboardList size={26} color="#2563EB" strokeWidth={2} />
+          <ClipboardList size={26} color={Colors.primary} strokeWidth={2} />
         </View>
       </View>
 
@@ -204,10 +205,10 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: '#2563EB',
+    backgroundColor: Colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#2563EB',
+    shadowColor: Colors.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.35,
     shadowRadius: 8,

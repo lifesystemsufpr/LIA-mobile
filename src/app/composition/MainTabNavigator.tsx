@@ -7,10 +7,7 @@ import { DashboardScreen } from '../features/dashboard';
 import { HistoryListScreen } from '../features/history';
 import { ParticipantDetailScreen, ParticipantsListScreen } from '../features/participants';
 import { ProtocolsCatalogScreen } from '../features/protocols';
-import {
-  QuestionnaireExecutionScreen,
-  QuestionnairesListScreen,
-} from '../features/questionnaire';
+import { IVCFScreen } from '../features/questionnaire';
 import { SettingsScreen } from '../features/settings';
 import { AppTabBar } from '../navigation';
 import { Colors, Participant } from '../shared';
@@ -21,46 +18,8 @@ export type ParticipantsTabStackParamList = {
   ParticipantDetail: { participant: Participant };
 };
 
-export type QuestionnairesTabStackParamList = {
-  QuestionnairesList: undefined;
-  QuestionnaireExecution: { questionnaireId: string; participantId?: string };
-};
-
 const Tab = createBottomTabNavigator<MainTabParamList>();
 const ParticipantsStack = createNativeStackNavigator<ParticipantsTabStackParamList>();
-const QuestionnairesStack = createNativeStackNavigator<QuestionnairesTabStackParamList>();
-
-const QuestionnairesStackNavigator: React.FC = () => {
-  return (
-    <QuestionnairesStack.Navigator
-      screenOptions={{
-        headerShown: false,
-        animation: 'slide_from_right',
-      }}
-    >
-      <QuestionnairesStack.Screen name="QuestionnairesList">
-        {({ navigation }) => (
-          <QuestionnairesListScreen
-            onSelectQuestionnaire={(questionnaireId) =>
-              navigation.navigate('QuestionnaireExecution', { questionnaireId })
-            }
-          />
-        )}
-      </QuestionnairesStack.Screen>
-
-      <QuestionnairesStack.Screen name="QuestionnaireExecution">
-        {({ route, navigation }) => (
-          <QuestionnaireExecutionScreen
-            questionnaireId={route.params.questionnaireId}
-            participantId={route.params.participantId}
-            onBack={() => navigation.goBack()}
-            onFinish={() => navigation.navigate('QuestionnairesList')}
-          />
-        )}
-      </QuestionnairesStack.Screen>
-    </QuestionnairesStack.Navigator>
-  );
-};
 
 const ParticipantsStackNavigator: React.FC = () => {
   const rootNav = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -137,10 +96,11 @@ export const MainTabNavigator: React.FC = () => {
       <Tab.Screen
         name="QuestionnairesTab"
         options={{
-          tabBarLabel: 'Questionários',
+          tabBarLabel: 'IVCF-20',
           tabBarIcon: ({ color, size }) => <ClipboardCheck size={size} color={color} />,
+          tabBarStyle: { display: 'none' },
         }}
-        component={QuestionnairesStackNavigator}
+        component={IVCFScreen}
       />
 
       <Tab.Screen

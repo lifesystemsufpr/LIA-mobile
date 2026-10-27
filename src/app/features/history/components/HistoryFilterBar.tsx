@@ -19,6 +19,7 @@ import {
 } from 'lucide-react-native';
 import { SyncStatus } from '../../../shared';
 import { DateRangeFilter } from '../store/historyStore';
+import { Colors } from '../../../shared';
 
 export type HistoryFilterBarProps = {
   selectedProtocol: string | null;
@@ -95,12 +96,12 @@ export const HistoryFilterBar: React.FC<HistoryFilterBarProps> = ({
     selectedSyncStatus === 'synced'
       ? 'Sincronizadas'
       : selectedSyncStatus === 'pending'
-      ? 'Pendentes'
-      : selectedSyncStatus === 'syncing'
-      ? 'Sincronizando'
-      : selectedSyncStatus === 'failed'
-      ? 'Falha'
-      : 'Sincronização';
+        ? 'Pendentes'
+        : selectedSyncStatus === 'syncing'
+          ? 'Sincronizando'
+          : selectedSyncStatus === 'failed'
+            ? 'Falha'
+            : 'Sincronização';
 
 
   return (
@@ -117,7 +118,7 @@ export const HistoryFilterBar: React.FC<HistoryFilterBarProps> = ({
           onPress={handleOpenDateModal}
           style={[styles.chip, selectedDate !== null && styles.chipActive]}
         >
-          <Calendar size={18} color="#2563EB" strokeWidth={2} />
+          <Calendar size={18} color={Colors.primary} strokeWidth={2} />
           <Text style={[styles.chipText, selectedDate !== null && styles.chipTextActive]}>
             {dateRangeLabel}
           </Text>
@@ -130,7 +131,7 @@ export const HistoryFilterBar: React.FC<HistoryFilterBarProps> = ({
           onPress={() => setProtocolModalVisible(true)}
           style={styles.chip}
         >
-          <Activity size={18} color="#2563EB" strokeWidth={2.4} />
+          <Activity size={18} color={Colors.primary} strokeWidth={2.4} />
           <Text style={styles.chipText}>
             {selectedProtocol ?? 'Tipo de Teste'}
           </Text>
@@ -143,13 +144,13 @@ export const HistoryFilterBar: React.FC<HistoryFilterBarProps> = ({
           onPress={() => setSyncModalVisible(true)}
           style={styles.chip}
         >
-          <Cloud size={18} color="#2563EB" strokeWidth={2.2} />
+          <Cloud size={18} color={Colors.primary} strokeWidth={2.2} />
           <Text style={styles.chipText}>
             {selectedSyncStatus === 'synced'
               ? 'Sincronizadas'
               : selectedSyncStatus === 'pending'
-              ? 'Pendentes'
-              : 'Sincronização'}
+                ? 'Pendentes'
+                : 'Sincronização'}
           </Text>
           <ChevronDown size={15} color="#94A3B8" strokeWidth={2} />
         </TouchableOpacity>
@@ -181,7 +182,7 @@ export const HistoryFilterBar: React.FC<HistoryFilterBarProps> = ({
                       <Text style={[styles.modalItemText, isSelected && styles.modalItemTextSelected]}>
                         {p.label}
                       </Text>
-                      {isSelected && <Check size={18} color="#2563EB" />}
+                      {isSelected && <Check size={18} color={Colors.primary} />}
                     </TouchableOpacity>
                   );
                 })}
@@ -217,7 +218,7 @@ export const HistoryFilterBar: React.FC<HistoryFilterBarProps> = ({
                       <Text style={[styles.modalItemText, isSelected && styles.modalItemTextSelected]}>
                         {s.label}
                       </Text>
-                      {isSelected && <Check size={18} color="#2563EB" />}
+                      {isSelected && <Check size={18} color={Colors.primary} />}
                     </TouchableOpacity>
                   );
                 })}
@@ -275,7 +276,7 @@ export const HistoryFilterBar: React.FC<HistoryFilterBarProps> = ({
                       Exibir histórico completo sem restrição
                     </Text>
                   </View>
-                  {selectedDate === null && <Check size={18} color="#2563EB" />}
+                  {selectedDate === null && <Check size={18} color={Colors.primary} />}
                 </TouchableOpacity>
 
                 <View style={styles.modalDivider} />
@@ -438,15 +439,15 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   modalItemTextSelected: {
-    color: '#2563EB',
+    color: Colors.primary,
     fontWeight: '700',
   },
   chipActive: {
-    borderColor: '#2563EB',
+    borderColor: Colors.primary,
     backgroundColor: '#EFF6FF',
   },
   chipTextActive: {
-    color: '#2563EB',
+    color: Colors.primary,
     fontWeight: '700',
   },
   modalHeaderRow: {
@@ -544,7 +545,7 @@ const styles = StyleSheet.create({
   },
   applyDateButton: {
     flex: 1,
-    backgroundColor: '#2563EB',
+    backgroundColor: Colors.primary,
     borderRadius: 10,
     paddingVertical: 11,
     justifyContent: 'center',

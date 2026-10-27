@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Colors } from '@/app/shared';
 
 export type StepPaginationDotsProps = {
   totalSteps: number;
@@ -59,7 +60,7 @@ const styles = StyleSheet.create({
   },
   dotActive: {
     width: 24,
-    backgroundColor: '#2962FF',
+    backgroundColor: Colors.primary,
   },
   dotInactive: {
     width: 8,
