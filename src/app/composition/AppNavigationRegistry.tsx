@@ -12,6 +12,7 @@ export const AppNavigationRegistry: Record<keyof RootStackParamList, RouteMetada
   AddParticipant: { title: 'Novo Participante', isProtected: true },
   ParticipantDetail: { title: 'Detalhes do Participante', isProtected: true },
   SelectProtocol: { title: 'Escolha do Teste', isProtected: true },
+  IVCFQuestionnaire: { title: 'IVCF-20', isProtected: true },
   SelectParticipant: { title: 'Selecionar Participante', isProtected: true },
   ParticipantSummaryModal: { title: 'Resumo do Participante', isProtected: true },
   TestGuide: { title: 'Instruções do Teste', isProtected: true },

@@ -5,14 +5,15 @@ export class ExpoSpeechService implements SpeechServiceContract {
   async speak(text: string, options?: SpeechOptions): Promise<void> {
     try {
       await Speech.stop();
-      Speech.speak(text, {
+      const speechOptions: Speech.SpeechOptions = {
         language: options?.language ?? 'pt-BR',
         pitch: options?.pitch ?? 1.0,
         rate: options?.rate ?? 0.95,
-        voice: 'pt-br-x-pte-local',
+        voice: options?.voice ?? 'pt-br-x-pte-local',
         onDone: options?.onDone,
         onError: options?.onError,
-      });
+      };
+      Speech.speak(text, speechOptions);
     } catch {
       if (options?.onError) {
         options.onError();
@@ -44,3 +45,5 @@ export class ExpoSpeechService implements SpeechServiceContract {
     }
   }
 }
+
+export const defaultSpeechService = new ExpoSpeechService();

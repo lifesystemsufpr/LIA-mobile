@@ -43,9 +43,48 @@ export const INITIAL_ASSESSMENTS: Assessment[] = [
     repetitions: 5,
     resultValue: 15.2,
     resultUnit: 'segundos',
-    syncStatus: 'pending', // Offline-first pending assessment
+    syncStatus: 'pending',
     sampleCount: 912,
     createdAt: '2025-08-01T16:20:15.200Z',
+  },
+  {
+    id: 'eval_04',
+    participantId: 'part_01',
+    professionalId: 'prof_01',
+    protocolId: 'IVCF-20',
+    startedAt: '2025-08-14T10:15:00.000Z',
+    completedAt: '2025-08-14T10:20:00.000Z',
+    resultValue: 4,
+    resultUnit: 'pontos',
+    notes: 'Robusto',
+    syncStatus: 'synced',
+    createdAt: '2025-08-14T10:20:00.000Z',
+  },
+  {
+    id: 'eval_05',
+    participantId: 'part_02',
+    professionalId: 'prof_01',
+    protocolId: 'IVCF-20',
+    startedAt: '2025-08-11T15:32:00.000Z',
+    completedAt: '2025-08-11T15:40:00.000Z',
+    resultValue: 11,
+    resultUnit: 'pontos',
+    notes: 'Risco de Fragilização',
+    syncStatus: 'synced',
+    createdAt: '2025-08-11T15:40:00.000Z',
+  },
+  {
+    id: 'eval_06',
+    participantId: 'part_04',
+    professionalId: 'prof_01',
+    protocolId: 'IVCF-20',
+    startedAt: '2025-08-05T11:02:00.000Z',
+    completedAt: '2025-08-05T11:10:00.000Z',
+    resultValue: 19,
+    resultUnit: 'pontos',
+    notes: 'Frágil',
+    syncStatus: 'pending',
+    createdAt: '2025-08-05T11:10:00.000Z',
   },
 ];
 
@@ -58,6 +97,15 @@ export class AssessmentsRepository {
       await this.storage.setItem(STORAGE_KEY, INITIAL_ASSESSMENTS);
       return INITIAL_ASSESSMENTS;
     }
+
+    const existingIds = new Set(data.map((item) => item.id));
+    const missingInitials = INITIAL_ASSESSMENTS.filter((item) => !existingIds.has(item.id));
+    if (missingInitials.length > 0) {
+      const merged = [...data, ...missingInitials];
+      await this.storage.setItem(STORAGE_KEY, merged);
+      return merged;
+    }
+
     return data;
   }
 

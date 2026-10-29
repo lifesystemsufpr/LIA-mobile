@@ -35,8 +35,8 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
   const femalePercent = isDefaultGender
     ? '56,1'
     : totalGender > 0
-    ? ((metrics.femaleCount / totalGender) * 100).toFixed(1).replace('.', ',')
-    : '0,0';
+      ? ((metrics.femaleCount / totalGender) * 100).toFixed(1).replace('.', ',')
+      : '0,0';
 
   const maleCountDisplay = isDefaultGender
     ? '1.689'
@@ -44,8 +44,8 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
   const malePercent = isDefaultGender
     ? '43,9'
     : totalGender > 0
-    ? ((metrics.maleCount / totalGender) * 100).toFixed(1).replace('.', ',')
-    : '0,0';
+      ? ((metrics.maleCount / totalGender) * 100).toFixed(1).replace('.', ',')
+      : '0,0';
 
   const totalProtocols = metrics.sts30Count + metrics.mst2Count;
   const isDefaultProtocols = totalProtocols <= 12;
@@ -55,8 +55,8 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
   const sts30Percent = isDefaultProtocols
     ? '62,9'
     : totalProtocols > 0
-    ? ((metrics.sts30Count / totalProtocols) * 100).toFixed(1).replace('.', ',')
-    : '0,0';
+      ? ((metrics.sts30Count / totalProtocols) * 100).toFixed(1).replace('.', ',')
+      : '0,0';
 
   const mst2CountDisplay = isDefaultProtocols
     ? '1.427'
@@ -64,8 +64,8 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
   const mst2Percent = isDefaultProtocols
     ? '37,1'
     : totalProtocols > 0
-    ? ((metrics.mst2Count / totalProtocols) * 100).toFixed(1).replace('.', ',')
-    : '0,0';
+      ? ((metrics.mst2Count / totalProtocols) * 100).toFixed(1).replace('.', ',')
+      : '0,0';
 
   return (
     <ScrollView
@@ -148,7 +148,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
 
         {/* Card 2: Tipo de Teste / Protocolo */}
         <DonutDistributionCard
-          title="Avaliações por Protocolo"
+          title="Avaliações por Tipo"
           segments={[
             {
               value: parseFloat(sts30Percent.replace(',', '.')),

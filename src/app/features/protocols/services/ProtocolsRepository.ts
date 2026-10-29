@@ -136,31 +136,6 @@ export const PROTOCOLS_CATALOG: Protocol[] = [
     enabled: false,
   },
   {
-    id: 'UTT',
-    name: 'Elevação na Ponta dos Pés (Upper Trunk Tilt)',
-    shortName: 'UTT',
-    description: 'Protocolo de elevação plantar e inclinação controlada de tronco para equilíbrio.',
-    functionalGoal: 'Avalia o controle postural antecipatório, equilíbrio dinâmico e força de tríceps sural.',
-    equipment: ['Superfície plana antiderrapante'],
-    safetyWarnings: [
-      'O avaliador deve permanecer ao lado do participante para prevenir quedas.',
-    ],
-    steps: [
-      {
-        stepNumber: 1,
-        title: 'Em Pé',
-        description: 'Pés alinhados na largura do quadril, postura ereta.',
-      },
-      {
-        stepNumber: 2,
-        title: 'Elevação',
-        description: 'Eleve os calcanhares mantendo a estabilidade do tronco.',
-      },
-    ],
-    sensorRequirements: 'Acelerômetro triaxial no esterno a 60 Hz.',
-    enabled: false,
-  },
-  {
     id: 'TUG',
     name: 'Timed Up and Go',
     shortName: 'TUG',

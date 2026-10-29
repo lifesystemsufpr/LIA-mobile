@@ -17,6 +17,7 @@ export const AssessmentHistoryCard: React.FC<AssessmentHistoryCardProps> = ({
   const isPending = assessment.syncStatus === 'pending';
 
   const getBadgeText = (protocolId: string): string => {
+    if (protocolId === 'IVCF-20') return 'IVCF';
     if (protocolId.startsWith('30s')) return '30s';
     if (protocolId.startsWith('1M')) return '1M';
     if (protocolId.startsWith('5T')) return '5T';
@@ -24,6 +25,10 @@ export const AssessmentHistoryCard: React.FC<AssessmentHistoryCardProps> = ({
   };
 
   const getResultText = (): string => {
+    if (assessment.protocolId === 'IVCF-20') {
+      const score = assessment.resultValue ?? 0;
+      return assessment.notes ? `${score} pts (${assessment.notes})` : `${score} pts`;
+    }
     if (
       (assessment.protocolId.startsWith('30s') || assessment.protocolId.startsWith('1M')) &&
       assessment.repetitions !== undefined

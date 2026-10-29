@@ -76,13 +76,16 @@ export const HistoryFilterBar: React.FC<HistoryFilterBarProps> = ({
     setDateModalVisible(true);
   };
 
-  const protocols = [
-    { label: 'Todos os testes', value: null },
+  const functionalProtocols = [
     { label: '30sSTS', value: '30sSTS' },
     { label: '1MSTS', value: '1MSTS' },
     { label: '5TSTS', value: '5TSTS' },
     { label: 'TUG', value: 'TUG' },
     { label: '2MST', value: '2MST' },
+  ];
+
+  const questionnaireProtocols = [
+    { label: 'IVCF-20', value: 'IVCF-20' },
   ];
 
   const syncOptions: { label: string; value: SyncStatus | 'all' }[] = [
@@ -167,8 +170,30 @@ export const HistoryFilterBar: React.FC<HistoryFilterBarProps> = ({
           <View style={styles.modalOverlay}>
             <TouchableWithoutFeedback>
               <View style={styles.modalContent}>
-                <Text style={styles.modalTitle}>Filtrar por Tipo de Teste</Text>
-                {protocols.map((p) => {
+                <Text style={styles.modalTitle}>Filtrar por Avaliação</Text>
+
+                {/* Opção geral: Todas as avaliações */}
+                <TouchableOpacity
+                  style={[styles.modalItem, selectedProtocol === null && styles.modalItemSelected]}
+                  onPress={() => {
+                    onSelectProtocol(null);
+                    setProtocolModalVisible(false);
+                  }}
+                >
+                  <Text
+                    style={[
+                      styles.modalItemText,
+                      selectedProtocol === null && styles.modalItemTextSelected,
+                    ]}
+                  >
+                    Todas as avaliações
+                  </Text>
+                  {selectedProtocol === null && <Check size={18} color={Colors.primary} />}
+                </TouchableOpacity>
+
+                {/* Seção: Testes Funcionais */}
+                <Text style={styles.protocolSectionTitle}>Testes Funcionais</Text>
+                {functionalProtocols.map((p) => {
                   const isSelected = selectedProtocol === p.value;
                   return (
                     <TouchableOpacity
@@ -181,6 +206,27 @@ export const HistoryFilterBar: React.FC<HistoryFilterBarProps> = ({
                     >
                       <Text style={[styles.modalItemText, isSelected && styles.modalItemTextSelected]}>
                         {p.label}
+                      </Text>
+                      {isSelected && <Check size={18} color={Colors.primary} />}
+                    </TouchableOpacity>
+                  );
+                })}
+
+                {/* Seção: Questionários */}
+                <Text style={styles.protocolSectionTitle}>Questionários</Text>
+                {questionnaireProtocols.map((q) => {
+                  const isSelected = selectedProtocol === q.value;
+                  return (
+                    <TouchableOpacity
+                      key={q.label}
+                      style={[styles.modalItem, isSelected && styles.modalItemSelected]}
+                      onPress={() => {
+                        onSelectProtocol(q.value);
+                        setProtocolModalVisible(false);
+                      }}
+                    >
+                      <Text style={[styles.modalItemText, isSelected && styles.modalItemTextSelected]}>
+                        {q.label}
                       </Text>
                       {isSelected && <Check size={18} color={Colors.primary} />}
                     </TouchableOpacity>
@@ -419,6 +465,15 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#0F172A',
     marginBottom: 16,
+  },
+  protocolSectionTitle: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#64748B',
+    textTransform: 'uppercase',
+    letterSpacing: 0.6,
+    marginTop: 14,
+    marginBottom: 4,
   },
   modalItem: {
     flexDirection: 'row',

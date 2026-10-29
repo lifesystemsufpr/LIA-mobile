@@ -3,7 +3,6 @@ import { Assessment, Participant, Protocol, SensorSample } from '../shared';
 export type MainTabParamList = {
   DashboardTab: undefined;
   ProtocolsTab: undefined;
-  QuestionnairesTab: undefined;
   HistoryTab: undefined;
   ParticipantsTab: undefined;
   SettingsTab: undefined;
@@ -23,6 +22,7 @@ export type RootStackParamList = {
 
   // Assessment flow
   SelectProtocol: { participant?: Participant };
+  IVCFQuestionnaire: { participant?: Participant };
   SelectParticipant: { protocol?: Protocol; selectMode?: 'new-test' | 'select' };
   ParticipantSummaryModal: { participant: Participant; protocol?: Protocol };
   TestGuide: { protocol: Protocol; participant: Participant };

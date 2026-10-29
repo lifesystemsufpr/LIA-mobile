@@ -11,6 +11,7 @@ import {
   ArrowUp,
   ArrowUpDown,
   ChevronRight,
+  ClipboardCheck,
   Footprints,
   Repeat,
 } from 'lucide-react-native';
@@ -27,11 +28,13 @@ import { useProtocols } from '../hooks/useProtocols';
 
 export type ProtocolsCatalogScreenProps = {
   onSelectProtocol: (protocol: Protocol) => void;
+  onSelectIVCF?: () => void;
   onBack?: () => void;
 };
 
 export const ProtocolsCatalogScreen: React.FC<ProtocolsCatalogScreenProps> = ({
   onSelectProtocol,
+  onSelectIVCF,
   onBack,
 }) => {
   const { protocols } = useProtocols();
@@ -85,7 +88,7 @@ export const ProtocolsCatalogScreen: React.FC<ProtocolsCatalogScreenProps> = ({
             </Text>
             {!isEnabled && (
               <View style={styles.disabledBadge}>
-                <Text style={styles.disabledBadgeText}>Desativado</Text>
+                <Text style={styles.disabledBadgeText}>Em desenvolvimento</Text>
               </View>
             )}
           </View>
@@ -116,10 +119,42 @@ export const ProtocolsCatalogScreen: React.FC<ProtocolsCatalogScreenProps> = ({
         contentContainerStyle={styles.listContent}
         ListHeaderComponent={
           <View style={styles.header}>
-            <Text style={styles.mainTitle}>Escolha o teste</Text>
+            <Text style={styles.mainTitle}>Avaliações Funcionais</Text>
             <Text style={styles.subtitle}>
               Selecione o protocolo clínico que será realizado.
             </Text>
+          </View>
+        }
+        ListFooterComponent={
+          <View style={styles.questionnairesSection}>
+            <View style={styles.header}>
+              <Text style={styles.mainTitle}>Questionários</Text>
+              <Text style={styles.subtitle}>
+                Selecione o questionário clínico-funcional que será aplicado.
+              </Text>
+            </View>
+
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={onSelectIVCF}
+              style={styles.card}
+            >
+              <View style={styles.iconContainer}>
+                <ClipboardCheck size={28} color={Colors.primary} />
+              </View>
+
+              <View style={styles.info}>
+                <View style={styles.titleRow}>
+                  <Text style={styles.protocolShort}>IVCF-20</Text>
+                </View>
+                <Text style={styles.protocolDesc} numberOfLines={2}>
+                  Índice de Vulnerabilidade Clínico-Funcional — triagem multidimensional de fragilidade em idosos.
+                </Text>
+                <Text style={styles.protocolTag}>20 QUESTÕES</Text>
+              </View>
+
+              <ChevronRight size={20} color={Colors.border} />
+            </TouchableOpacity>
           </View>
         }
       />
@@ -139,6 +174,9 @@ const styles = StyleSheet.create({
   header: {
     marginBottom: Spacing.lg,
     paddingTop: Spacing.sm,
+  },
+  questionnairesSection: {
+    marginTop: Spacing.md,
   },
   mainTitle: {
     fontSize: Typography.sizes.xxl,

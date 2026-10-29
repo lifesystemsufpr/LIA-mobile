@@ -8,6 +8,7 @@ import {
   ParticipantsListScreen,
 } from '../features/participants';
 import { ProtocolsCatalogScreen } from '../features/protocols';
+import { IVCFScreen } from '../features/questionnaire';
 import { TestGuideScreen, TestPositioningScreen } from '../features/test-guide';
 import { ParticipantSummaryModalScreen } from '../features/assessment';
 import { CountdownScreen, TestExecutionScreen } from '../features/sensor-collection';
@@ -91,9 +92,16 @@ export const RootNavigator: React.FC = () => {
                     });
                   }
                 }}
+                onSelectIVCF={() =>
+                  navigation.navigate('IVCFQuestionnaire', {
+                    participant: route.params?.participant,
+                  })
+                }
               />
             )}
           </Stack.Screen>
+
+          <Stack.Screen name="IVCFQuestionnaire" component={IVCFScreen} />
 
           <Stack.Screen name="SelectParticipant">
             {({ route, navigation }) => (

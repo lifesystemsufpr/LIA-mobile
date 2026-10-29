@@ -1,6 +1,6 @@
 export type BiologicalSex = 'female' | 'male' | 'other';
 
-export type ProtocolId = '30sSTS' | '1MSTS' | '5TSTS' | '2MST' | 'UTT' | 'TUG';
+export type ProtocolId = '30sSTS' | '1MSTS' | '5TSTS' | '2MST' | 'UTT' | 'TUG' | 'IVCF-20';
 
 export type SyncStatus = 'pending' | 'syncing' | 'synced' | 'failed';
 

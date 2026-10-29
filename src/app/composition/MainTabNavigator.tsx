@@ -2,12 +2,11 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
-import { ClipboardCheck, ClipboardList, History, Home, Settings, Users } from 'lucide-react-native';
+import { ClipboardList, History, Home, Settings, Users } from 'lucide-react-native';
 import { DashboardScreen } from '../features/dashboard';
 import { HistoryListScreen } from '../features/history';
 import { ParticipantDetailScreen, ParticipantsListScreen } from '../features/participants';
 import { ProtocolsCatalogScreen } from '../features/protocols';
-import { IVCFScreen } from '../features/questionnaire';
 import { SettingsScreen } from '../features/settings';
 import { AppTabBar } from '../navigation';
 import { Colors, Participant } from '../shared';
@@ -89,19 +88,10 @@ export const MainTabNavigator: React.FC = () => {
             onSelectProtocol={(protocol) =>
               rootNav.navigate('SelectParticipant', { protocol, selectMode: 'select' })
             }
+            onSelectIVCF={() => rootNav.navigate('IVCFQuestionnaire', {})}
           />
         )}
       </Tab.Screen>
-
-      <Tab.Screen
-        name="QuestionnairesTab"
-        options={{
-          tabBarLabel: 'IVCF-20',
-          tabBarIcon: ({ color, size }) => <ClipboardCheck size={size} color={color} />,
-          tabBarStyle: { display: 'none' },
-        }}
-        component={IVCFScreen}
-      />
 
       <Tab.Screen
         name="HistoryTab"

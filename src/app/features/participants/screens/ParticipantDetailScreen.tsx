@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -6,14 +6,22 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
   Activity,
   Briefcase,
+  CheckCircle2,
+  ClipboardCheck,
+  Clock,
   GraduationCap,
   MapPin,
+  Play,
   User,
 } from 'lucide-react-native';
+import { RootStackParamList } from '../../../composition/AppRouteTypes';
 import {
+  Assessment,
   BorderRadius,
   calculateAge,
   Colors,
@@ -22,17 +30,30 @@ import {
   formatDateBR,
   getInitials,
   Participant,
+  Protocol,
+  ProtocolId,
   Spacing,
   StatusChip,
   TopAppBar,
   Typography,
 } from '../../../shared';
+import { defaultAssessmentsRepository } from '../../history';
+import { defaultProtocolsRepository } from '../../protocols';
 
 export type ParticipantDetailScreenProps = {
   participant: Participant;
   onBack?: () => void;
   onStartAssessment?: (participant: Participant) => void;
   onViewAssessmentDetail?: (assessmentId: string) => void;
+};
+
+type PendingEvaluationItem = {
+  id: ProtocolId;
+  shortName: string;
+  title: string;
+  categoryLabel: string;
+  protocol?: Protocol;
+  isQuestionnaire?: boolean;
 };
 
 const CLASS_TO_INCOME_MAP: Record<string, string> = {
@@ -179,7 +200,18 @@ export const ParticipantDetailScreen: React.FC<ParticipantDetailScreenProps> = (
   onBack,
   onViewAssessmentDetail,
 }) => {
+  const rootNav = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [activeTab, setActiveTab] = useState<'dados' | 'historico'>('dados');
+  const [participantAssessments, setParticipantAssessments] = useState<Assessment[]>([]);
+
+  const loadParticipantAssessments = useCallback(async () => {
+    const items = await defaultAssessmentsRepository.getByParticipantId(participant.id);
+    setParticipantAssessments(items);
+  }, [participant.id]);
+
+  useEffect(() => {
+    loadParticipantAssessments();
+  }, [loadParticipantAssessments, activeTab]);
 
   const age = calculateAge(participant.birthDate);
   const formattedCpf = formatCPF(participant.cpf);
@@ -203,23 +235,70 @@ export const ParticipantDetailScreen: React.FC<ParticipantDetailScreenProps> = (
         ).toFixed(1)
       : null;
 
-  // Sample historical assessments for this participant (will be connected to AssessmentsRepository)
-  const sampleAssessments = [
-    {
-      id: 'eval_01',
-      protocolName: '30sSTS',
-      date: '12/08/2025',
-      result: '12 reps',
-      status: 'synced' as const,
-    },
-    {
-      id: 'eval_02',
-      protocolName: 'TUG',
-      date: '10/08/2025',
-      result: '11.4 s',
-      status: 'synced' as const,
-    },
-  ];
+  const pendingEvaluations = useMemo<PendingEvaluationItem[]>(() => {
+    const completedIds = new Set<ProtocolId>(
+      participantAssessments.map((a) => a.protocolId)
+    );
+
+    const activeFunctional = defaultProtocolsRepository
+      .getAll()
+      .filter((p) => p.enabled !== false)
+      .map<PendingEvaluationItem>((p) => ({
+        id: p.id,
+        shortName: p.shortName,
+        title: p.name,
+        categoryLabel: 'Avaliação Funcional',
+        protocol: p,
+      }));
+
+    const ivcfItem: PendingEvaluationItem = {
+      id: 'IVCF-20',
+      shortName: 'IVCF-20',
+      title: 'Índice de Vulnerabilidade Clínico-Funcional',
+      categoryLabel: 'Questionário • 20 questões',
+      isQuestionnaire: true,
+    };
+
+    return [...activeFunctional, ivcfItem].filter(
+      (item) => !completedIds.has(item.id)
+    );
+  }, [participantAssessments]);
+
+  const handleApplyEvaluation = (item: PendingEvaluationItem) => {
+    if (item.isQuestionnaire) {
+      rootNav.navigate('IVCFQuestionnaire', { participant });
+      return;
+    }
+    if (item.protocol) {
+      rootNav.navigate('TestGuide', {
+        protocol: item.protocol,
+        participant,
+      });
+    }
+  };
+
+  const handleOpenAssessmentDetail = (assessment: Assessment) => {
+    if (onViewAssessmentDetail) {
+      onViewAssessmentDetail(assessment.id);
+      return;
+    }
+    rootNav.navigate('EvaluationDetail', { assessment });
+  };
+
+  const formatAssessmentResult = (a: Assessment): string => {
+    if (a.protocolId === 'IVCF-20') {
+      const score = a.resultValue ?? 0;
+      return a.notes ? `${score} pts (${a.notes})` : `${score} pts`;
+    }
+    if (
+      (a.protocolId.startsWith('30s') || a.protocolId.startsWith('1M')) &&
+      a.repetitions !== undefined
+    ) {
+      return `${a.repetitions} reps`;
+    }
+    const sec = a.durationSeconds ?? a.resultValue ?? 0;
+    return `${sec} s`;
+  };
 
   return (
     <View style={styles.container}>
@@ -260,11 +339,20 @@ export const ParticipantDetailScreen: React.FC<ParticipantDetailScreenProps> = (
             onPress={() => setActiveTab('historico')}
             style={[styles.tabButton, activeTab === 'historico' && styles.tabButtonActive]}
           >
-            <Text
-              style={[styles.tabText, activeTab === 'historico' && styles.tabTextActive]}
-            >
-              Histórico de Avaliações
-            </Text>
+            <View style={styles.tabLabelRow}>
+              <Text
+                style={[styles.tabText, activeTab === 'historico' && styles.tabTextActive]}
+              >
+                Histórico de Avaliações
+              </Text>
+              {pendingEvaluations.length > 0 && (
+                <View style={styles.pendingCountBadge}>
+                  <Text style={styles.pendingCountBadgeText}>
+                    {pendingEvaluations.length}
+                  </Text>
+                </View>
+              )}
+            </View>
           </TouchableOpacity>
         </View>
 
@@ -436,26 +524,110 @@ export const ParticipantDetailScreen: React.FC<ParticipantDetailScreenProps> = (
           </View>
         ) : (
           <View style={styles.tabContent}>
-            {sampleAssessments.length > 0 ? (
-              sampleAssessments.map((item) => (
-                <TouchableOpacity
-                  key={item.id}
-                  activeOpacity={0.7}
-                  onPress={() => onViewAssessmentDetail?.(item.id)}
-                  style={styles.assessmentCard}
-                >
-                  <View style={styles.protocolBadge}>
-                    <Text style={styles.protocolBadgeText}>{item.protocolName}</Text>
+            {/* Seção 1: Avaliações Pendentes (Não Realizadas) */}
+            <View style={styles.historyGroupHeader}>
+              <View style={styles.historyGroupTitleRow}>
+                <Clock size={16} color="#D97706" />
+                <Text style={styles.historyGroupTitle}>
+                  Avaliações Pendentes ({pendingEvaluations.length})
+                </Text>
+              </View>
+              <Text style={styles.historyGroupSubtitle}>
+                Protocolos ativos que ainda não foram aplicados a este participante.
+              </Text>
+            </View>
+
+            {pendingEvaluations.length > 0 ? (
+              <View style={styles.pendingList}>
+                {pendingEvaluations.map((pending) => (
+                  <View key={pending.id} style={styles.pendingCard}>
+                    <View style={styles.pendingIconBox}>
+                      {pending.isQuestionnaire ? (
+                        <ClipboardCheck size={20} color="#D97706" />
+                      ) : (
+                        <Activity size={20} color="#D97706" />
+                      )}
+                    </View>
+
+                    <View style={styles.pendingInfo}>
+                      <View style={styles.pendingTitleRow}>
+                        <Text style={styles.pendingShortName}>{pending.shortName}</Text>
+                        <View style={styles.notDonePill}>
+                          <Text style={styles.notDonePillText}>Não realizada</Text>
+                        </View>
+                      </View>
+                      <Text style={styles.pendingFullName} numberOfLines={1}>
+                        {pending.title}
+                      </Text>
+                      <Text style={styles.pendingCategory}>{pending.categoryLabel}</Text>
+                    </View>
+
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      onPress={() => handleApplyEvaluation(pending)}
+                      style={styles.applyButton}
+                    >
+                      <Play size={13} color={Colors.surface} fill={Colors.surface} />
+                      <Text style={styles.applyButtonText}>Aplicar</Text>
+                    </TouchableOpacity>
                   </View>
-                  <View style={styles.assessmentInfo}>
-                    <Text style={styles.assessmentProtocol}>{item.protocolName}</Text>
-                    <Text style={styles.assessmentMeta}>
-                      {item.date} &bull; {item.result}
-                    </Text>
-                  </View>
-                  <StatusChip status={item.status} showText={false} />
-                </TouchableOpacity>
-              ))
+                ))}
+              </View>
+            ) : (
+              <View style={styles.allDoneBanner}>
+                <CheckCircle2 size={20} color={Colors.success} />
+                <Text style={styles.allDoneText}>
+                  Todas as avaliações ativas já foram realizadas por este participante.
+                </Text>
+              </View>
+            )}
+
+            {/* Seção 2: Avaliações Realizadas */}
+            <View style={[styles.historyGroupHeader, styles.completedGroupHeader]}>
+              <View style={styles.historyGroupTitleRow}>
+                <CheckCircle2 size={16} color={Colors.primary} />
+                <Text style={styles.historyGroupTitle}>
+                  Avaliações Realizadas ({participantAssessments.length})
+                </Text>
+              </View>
+              <Text style={styles.historyGroupSubtitle}>
+                Coletas e questionários já concluídos por este participante.
+              </Text>
+            </View>
+
+            {participantAssessments.length > 0 ? (
+              participantAssessments.map((item) => {
+                const badgeText =
+                  item.protocolId === 'IVCF-20'
+                    ? 'IVCF'
+                    : item.protocolId.startsWith('30s')
+                    ? '30s'
+                    : item.protocolId.startsWith('1M')
+                    ? '1M'
+                    : item.protocolId.startsWith('5T')
+                    ? '5T'
+                    : item.protocolId.slice(0, 3);
+
+                return (
+                  <TouchableOpacity
+                    key={item.id}
+                    activeOpacity={0.7}
+                    onPress={() => handleOpenAssessmentDetail(item)}
+                    style={styles.assessmentCard}
+                  >
+                    <View style={styles.protocolBadge}>
+                      <Text style={styles.protocolBadgeText}>{badgeText}</Text>
+                    </View>
+                    <View style={styles.assessmentInfo}>
+                      <Text style={styles.assessmentProtocol}>{item.protocolId}</Text>
+                      <Text style={styles.assessmentMeta}>
+                        {formatDateBR(item.createdAt)} &bull; {formatAssessmentResult(item)}
+                      </Text>
+                    </View>
+                    <StatusChip status={item.syncStatus} showText={false} />
+                  </TouchableOpacity>
+                );
+              })
             ) : (
               <EmptyState
                 title="Sem avaliações anteriores"
@@ -667,5 +839,145 @@ const styles = StyleSheet.create({
   assessmentMeta: {
     fontSize: Typography.sizes.xs,
     color: Colors.textMuted,
+  },
+  tabLabelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  pendingCountBadge: {
+    backgroundColor: '#FEF3C7',
+    borderWidth: 1,
+    borderColor: '#FDE68A',
+    borderRadius: 10,
+    minWidth: 20,
+    height: 20,
+    paddingHorizontal: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  pendingCountBadgeText: {
+    fontSize: 11,
+    fontWeight: Typography.weights.extrabold,
+    color: '#D97706',
+  },
+  historyGroupHeader: {
+    marginBottom: Spacing.sm,
+  },
+  completedGroupHeader: {
+    marginTop: Spacing.lg,
+  },
+  historyGroupTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 2,
+  },
+  historyGroupTitle: {
+    fontSize: Typography.sizes.md,
+    fontWeight: Typography.weights.extrabold,
+    color: Colors.primaryDark,
+  },
+  historyGroupSubtitle: {
+    fontSize: Typography.sizes.xs,
+    color: Colors.textMuted,
+  },
+  pendingList: {
+    gap: Spacing.sm,
+  },
+  pendingCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.surface,
+    borderWidth: 1,
+    borderColor: '#FDE68A',
+    borderLeftWidth: 4,
+    borderLeftColor: '#F59E0B',
+    borderRadius: BorderRadius.md,
+    padding: Spacing.md,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.03,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  pendingIconBox: {
+    width: 40,
+    height: 40,
+    borderRadius: BorderRadius.sm,
+    backgroundColor: '#FEF3C7',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: Spacing.md,
+  },
+  pendingInfo: {
+    flex: 1,
+    marginRight: Spacing.sm,
+  },
+  pendingTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 2,
+  },
+  pendingShortName: {
+    fontSize: Typography.sizes.md,
+    fontWeight: Typography.weights.extrabold,
+    color: Colors.textMain,
+  },
+  notDonePill: {
+    backgroundColor: '#FEF3C7',
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  notDonePillText: {
+    fontSize: 10,
+    fontWeight: Typography.weights.bold,
+    color: '#B45309',
+    textTransform: 'uppercase',
+    letterSpacing: 0.4,
+  },
+  pendingFullName: {
+    fontSize: Typography.sizes.xs,
+    fontWeight: Typography.weights.semibold,
+    color: Colors.textMain,
+    marginBottom: 2,
+  },
+  pendingCategory: {
+    fontSize: 11,
+    color: Colors.textMuted,
+    fontWeight: Typography.weights.medium,
+  },
+  applyButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: Colors.primary,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: BorderRadius.sm,
+  },
+  applyButtonText: {
+    fontSize: Typography.sizes.xs,
+    fontWeight: Typography.weights.bold,
+    color: Colors.surface,
+  },
+  allDoneBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.sm,
+    backgroundColor: '#DCFCE7',
+    borderWidth: 1,
+    borderColor: '#BBF7D0',
+    borderRadius: BorderRadius.md,
+    padding: Spacing.md,
+  },
+  allDoneText: {
+    flex: 1,
+    fontSize: Typography.sizes.xs,
+    fontWeight: Typography.weights.semibold,
+    color: '#166534',
+    lineHeight: 18,
   },
 });

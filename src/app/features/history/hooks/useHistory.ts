@@ -44,10 +44,8 @@ export function useHistory() {
   const { participants } = useParticipantsStore();
 
   useEffect(() => {
-    if (assessments.length === 0) {
-      fetchAssessments();
-    }
-  }, [fetchAssessments, assessments.length]);
+    fetchAssessments();
+  }, [fetchAssessments]);
 
   const participantsMap = useMemo(() => {
     const map = new Map<string, string>();

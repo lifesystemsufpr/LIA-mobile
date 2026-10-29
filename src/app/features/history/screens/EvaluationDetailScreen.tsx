@@ -103,9 +103,13 @@ export const EvaluationDetailScreen: React.FC<EvaluationDetailScreenProps> = ({
           <View style={styles.divider} />
 
           <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Sensores Inerciais</Text>
+            <Text style={styles.detailLabel}>
+              {assessment.protocolId === 'IVCF-20' ? 'Classificação Clínica' : 'Sensores Inerciais'}
+            </Text>
             <Text style={styles.detailValue}>
-              Acelerômetro + Giroscópio (60 Hz) &bull; {assessment.sampleCount ?? 1800} amostras
+              {assessment.protocolId === 'IVCF-20'
+                ? (assessment.notes ?? 'Questionário Clínico-Funcional (20 questões)')
+                : `Acelerômetro + Giroscópio (60 Hz) \u2022 ${assessment.sampleCount ?? 1800} amostras`}
             </Text>
           </View>
         </View>
