@@ -102,7 +102,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
             </View>
             <View style={styles.menuTextContent}>
               <Text style={styles.menuTitle}>Sobre o LIA</Text>
-              <Text style={styles.menuSubtitle}>Versão 1.0 &bull; TecnoAging Lab</Text>
+              <Text style={styles.menuSubtitle}>Versão 1.0 &bull; Life Sytems</Text>
             </View>
             <ChevronRight size={18} color={Colors.border} />
           </TouchableOpacity>

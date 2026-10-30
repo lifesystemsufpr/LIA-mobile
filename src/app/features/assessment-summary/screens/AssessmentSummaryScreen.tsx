@@ -167,7 +167,7 @@ export const AssessmentSummaryScreen: React.FC<AssessmentSummaryScreenProps> = (
       <ConfirmationDialog
         visible={confirmSendVisible}
         title="Enviar Dados?"
-        message="Deseja confirmar o envio dos dados desta avaliação para a nuvem?"
+        message="Deseja confirmar o envio dos dados desta avaliação ?"
         confirmLabel="Sim, enviar"
         cancelLabel="Voltar"
         onConfirm={handleConfirmSend}

@@ -120,7 +120,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
       >
         {/* Card 1: Gênero */}
         <DonutDistributionCard
-          title="Avaliações por Gênero"
+          title="Avaliações por Sexo"
           segments={[
             {
               value: parseFloat(femalePercent.replace(',', '.')),
