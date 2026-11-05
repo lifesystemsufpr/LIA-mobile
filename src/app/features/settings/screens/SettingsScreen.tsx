@@ -7,17 +7,22 @@ import {
   View,
 } from 'react-native';
 import {
+  Building2,
+  Check,
   ChevronRight,
   Cloud,
   Database,
   Info,
   LogOut,
+  MapPin,
+  ShieldCheck,
 } from 'lucide-react-native';
 import {
   BorderRadius,
   Button,
   Colors,
   getInitials,
+  InstitutionalRole,
   Spacing,
   TopAppBar,
   Typography,
@@ -29,14 +34,30 @@ export type SettingsScreenProps = {
   onBack?: () => void;
 };
 
+const ROLE_LABELS: Record<InstitutionalRole, string> = {
+  ADMIN: 'Administrador Institucional',
+  GESTOR_UNIDADE: 'Gestor de Unidade',
+  AVALIADOR: 'Avaliador',
+};
+
 export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   onLogout,
   onBack,
 }) => {
-  const { professional, logout } = useSessionStore();
+  const {
+    professional,
+    activeInstitutionId,
+    activeApplicationSiteId,
+    activeRole,
+    accessibleInstitutions,
+    accessibleApplicationSites,
+    selectInstitution,
+    selectApplicationSite,
+    logout,
+  } = useSessionStore();
   const initials = getInitials(professional?.name ?? 'Dr. Roberto Silva');
 
-  const handleLogout = () => {
+  const handleLogout = (): void => {
     logout();
     if (onLogout) {
       onLogout();
@@ -58,11 +79,92 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
             <Text style={styles.category}>
               {professional?.professionalCategory ?? 'Fisioterapeuta'}
             </Text>
+            {activeRole ? (
+              <View style={styles.roleBadge}>
+                <ShieldCheck size={12} color={Colors.primaryDark} />
+                <Text style={styles.roleBadgeText}>{ROLE_LABELS[activeRole]}</Text>
+              </View>
+            ) : null}
           </View>
           <ChevronRight size={20} color={Colors.border} />
         </View>
 
+        {/* Contexto Multi-Institucional */}
+        <Text style={styles.sectionHeader}>Vínculo Institucional Ativo</Text>
+        <View style={styles.menuCard}>
+          {accessibleInstitutions.map((inst, index) => {
+            const isSelected = inst.id === activeInstitutionId;
+            return (
+              <React.Fragment key={inst.id}>
+                {index > 0 ? <View style={styles.divider} /> : null}
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  style={styles.menuItem}
+                  onPress={() => selectInstitution(inst.id)}
+                >
+                  <View
+                    style={[
+                      styles.menuIconWrapper,
+                      isSelected && styles.menuIconWrapperActive,
+                    ]}
+                  >
+                    <Building2
+                      size={20}
+                      color={isSelected ? Colors.primary : Colors.primaryDark}
+                    />
+                  </View>
+                  <View style={styles.menuTextContent}>
+                    <Text style={styles.menuTitle}>{inst.acronym}</Text>
+                    <Text style={styles.menuSubtitle} numberOfLines={1}>
+                      {inst.name}
+                    </Text>
+                  </View>
+                  {isSelected ? <Check size={18} color={Colors.primary} /> : null}
+                </TouchableOpacity>
+              </React.Fragment>
+            );
+          })}
+        </View>
+
+        {/* Unidade de Aplicação Ativa */}
+        <Text style={styles.sectionHeader}>Unidade de Aplicação</Text>
+        <View style={styles.menuCard}>
+          {accessibleApplicationSites.map((site, index) => {
+            const isSelected = site.id === activeApplicationSiteId;
+            return (
+              <React.Fragment key={site.id}>
+                {index > 0 ? <View style={styles.divider} /> : null}
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  style={styles.menuItem}
+                  onPress={() => selectApplicationSite(site.id)}
+                >
+                  <View
+                    style={[
+                      styles.menuIconWrapper,
+                      isSelected && styles.menuIconWrapperActive,
+                    ]}
+                  >
+                    <MapPin
+                      size={20}
+                      color={isSelected ? Colors.primary : Colors.primaryDark}
+                    />
+                  </View>
+                  <View style={styles.menuTextContent}>
+                    <Text style={styles.menuTitle}>{site.name}</Text>
+                    <Text style={styles.menuSubtitle} numberOfLines={1}>
+                      {site.address}
+                    </Text>
+                  </View>
+                  {isSelected ? <Check size={18} color={Colors.primary} /> : null}
+                </TouchableOpacity>
+              </React.Fragment>
+            );
+          })}
+        </View>
+
         {/* Settings Menu List */}
+        <Text style={styles.sectionHeader}>Sistema</Text>
         <View style={styles.menuCard}>
           {/* Sincronização */}
           <TouchableOpacity activeOpacity={0.7} style={styles.menuItem}>
@@ -88,7 +190,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
             </View>
             <View style={styles.menuTextContent}>
               <Text style={styles.menuTitle}>Armazenamento local</Text>
-              <Text style={styles.menuSubtitle}>12 avaliações &bull; 2.4 MB</Text>
+              <Text style={styles.menuSubtitle}>Fallback offline ativo &bull; 2.4 MB</Text>
             </View>
             <ChevronRight size={18} color={Colors.border} />
           </TouchableOpacity>
@@ -102,7 +204,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
             </View>
             <View style={styles.menuTextContent}>
               <Text style={styles.menuTitle}>Sobre o LIA</Text>
-              <Text style={styles.menuSubtitle}>Versão 1.0 &bull; Life Sytems</Text>
+              <Text style={styles.menuSubtitle}>Versão 1.1 Multi-Institucional &bull; Life Systems</Text>
             </View>
             <ChevronRight size={18} color={Colors.border} />
           </TouchableOpacity>
@@ -118,7 +220,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           style={styles.logoutButton}
         />
 
-        <Text style={styles.buildFooter}>LIA Mobile v1.0.0 &bull; Build 2026.09</Text>
+        <Text style={styles.buildFooter}>LIA Mobile v1.1.0 &bull; Build 2026.10</Text>
       </ScrollView>
     </View>
   );
@@ -132,6 +234,15 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: Spacing.md,
     paddingBottom: 40,
+  },
+  sectionHeader: {
+    fontSize: Typography.sizes.xs,
+    fontWeight: Typography.weights.bold,
+    color: Colors.textMuted,
+    textTransform: 'uppercase',
+    letterSpacing: 0.6,
+    marginBottom: Spacing.xs,
+    marginLeft: Spacing.xs,
   },
   profileCard: {
     flexDirection: 'row',
@@ -176,6 +287,22 @@ const styles = StyleSheet.create({
     color: Colors.textMuted,
     fontWeight: Typography.weights.medium,
   },
+  roleBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    gap: 4,
+    marginTop: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: BorderRadius.full,
+    backgroundColor: 'rgba(20, 184, 166, 0.12)',
+  },
+  roleBadgeText: {
+    fontSize: 11,
+    fontWeight: Typography.weights.bold,
+    color: Colors.primaryDark,
+  },
   menuCard: {
     backgroundColor: Colors.surface,
     borderRadius: BorderRadius.lg,
@@ -197,6 +324,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: Spacing.md,
+  },
+  menuIconWrapperActive: {
+    backgroundColor: 'rgba(20, 184, 166, 0.12)',
   },
   menuTextContent: {
     flex: 1,

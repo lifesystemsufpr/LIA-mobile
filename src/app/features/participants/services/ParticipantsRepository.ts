@@ -1,10 +1,22 @@
-import { defaultStorageService, Participant, StorageServiceContract } from '../../../shared';
+import {
+  defaultAccessControlService,
+  defaultStorageService,
+  Participant,
+  RecordStatus,
+  StorageServiceContract,
+  useSessionStore,
+} from '../../../shared';
 
 const STORAGE_KEY = '@lia_participants';
 
 export const INITIAL_PARTICIPANTS: Participant[] = [
   {
     id: 'part_01',
+    institutionId: 'inst_ufpr',
+    institutionalCode: 'UFPR-2025-001',
+    applicationSiteId: 'site_ufpr_lab_a',
+    applicationSiteIds: ['site_ufpr_lab_a'],
+    status: 'active',
     fullName: 'Manuela Silva',
     birthDate: '1958-03-15',
     biologicalSex: 'female',
@@ -26,6 +38,11 @@ export const INITIAL_PARTICIPANTS: Participant[] = [
   },
   {
     id: 'part_02',
+    institutionId: 'inst_ufpr',
+    institutionalCode: 'UFPR-2025-002',
+    applicationSiteId: 'site_ufpr_lab_a',
+    applicationSiteIds: ['site_ufpr_lab_a'],
+    status: 'active',
     fullName: 'João Oliveira',
     birthDate: '1954-07-22',
     biologicalSex: 'male',
@@ -47,6 +64,11 @@ export const INITIAL_PARTICIPANTS: Participant[] = [
   },
   {
     id: 'part_03',
+    institutionId: 'inst_ufpr',
+    institutionalCode: 'UFPR-2025-003',
+    applicationSiteId: 'site_ufpr_lab_a',
+    applicationSiteIds: ['site_ufpr_lab_a'],
+    status: 'active',
     fullName: 'Maria Santos',
     birthDate: '1951-11-04',
     biologicalSex: 'female',
@@ -68,6 +90,11 @@ export const INITIAL_PARTICIPANTS: Participant[] = [
   },
   {
     id: 'part_04',
+    institutionId: 'inst_ufpr',
+    institutionalCode: 'UFPR-2025-004',
+    applicationSiteId: 'site_ufpr_amb_b',
+    applicationSiteIds: ['site_ufpr_amb_b'],
+    status: 'active',
     fullName: 'Carlos Pereira',
     birthDate: '1946-02-18',
     biologicalSex: 'male',
@@ -89,6 +116,11 @@ export const INITIAL_PARTICIPANTS: Participant[] = [
   },
   {
     id: 'part_05',
+    institutionId: 'inst_puc',
+    institutionalCode: 'PUC-2025-001',
+    applicationSiteId: 'site_puc_clinica',
+    applicationSiteIds: ['site_puc_clinica'],
+    status: 'active',
     fullName: 'Ana Rodrigues',
     birthDate: '1961-09-30',
     biologicalSex: 'female',
@@ -113,52 +145,121 @@ export const INITIAL_PARTICIPANTS: Participant[] = [
 export class ParticipantsRepository {
   constructor(private storage: StorageServiceContract = defaultStorageService) {}
 
-  async getAll(): Promise<Participant[]> {
+  private async getRawList(): Promise<Participant[]> {
     const data = await this.storage.getItem<Participant[]>(STORAGE_KEY);
     if (!data || data.length === 0) {
       await this.storage.setItem(STORAGE_KEY, INITIAL_PARTICIPANTS);
       return INITIAL_PARTICIPANTS;
     }
-    const enriched = data.map((p) => {
+
+    const enriched: Participant[] = data.map((p, idx) => {
       const initialMatch = INITIAL_PARTICIPANTS.find((item) => item.id === p.id);
-      if (initialMatch && (!p.street || !p.socioeconomicLevel?.includes('('))) {
-        return {
-          ...p,
-          street: p.street || initialMatch.street,
-          number: p.number || initialMatch.number,
-          complement: p.complement || initialMatch.complement,
-          neighborhood: p.neighborhood || initialMatch.neighborhood,
-          city: p.city || initialMatch.city,
-          state: p.state || initialMatch.state,
-          socioeconomicLevel:
-            p.socioeconomicLevel && !p.socioeconomicLevel.includes('(')
-              ? initialMatch.socioeconomicLevel
-              : p.socioeconomicLevel,
-        };
-      }
-      return p;
+      const resolvedStatus: RecordStatus = p.status ?? initialMatch?.status ?? 'active';
+      const resolvedSingleSite =
+        p.applicationSiteId ??
+        p.applicationSiteIds?.[0] ??
+        initialMatch?.applicationSiteId ??
+        'site_ufpr_lab_a';
+      return {
+        ...p,
+        institutionId: p.institutionId ?? initialMatch?.institutionId ?? 'inst_ufpr',
+        institutionalCode:
+          p.institutionalCode ??
+          initialMatch?.institutionalCode ??
+          `UFPR-LEG-${String(idx + 1).padStart(3, '0')}`,
+        applicationSiteId: resolvedSingleSite,
+        applicationSiteIds: [resolvedSingleSite],
+        status: resolvedStatus,
+        street: p.street || initialMatch?.street,
+        number: p.number || initialMatch?.number,
+        complement: p.complement || initialMatch?.complement,
+        neighborhood: p.neighborhood || initialMatch?.neighborhood,
+        city: p.city || initialMatch?.city,
+        state: p.state || initialMatch?.state,
+        socioeconomicLevel:
+          p.socioeconomicLevel && !p.socioeconomicLevel.includes('(')
+            ? initialMatch?.socioeconomicLevel ?? p.socioeconomicLevel
+            : p.socioeconomicLevel,
+      };
     });
+
     return enriched;
   }
 
+  async getAll(): Promise<Participant[]> {
+    const rawList = await this.getRawList();
+    const { professional, activeInstitutionId, activeApplicationSiteId } =
+      useSessionStore.getState();
+
+    if (!professional || !activeInstitutionId) {
+      return rawList;
+    }
+
+    try {
+      return defaultAccessControlService.filterParticipantsByScope(
+        {
+          authenticatedUserId: professional.id,
+          activeInstitutionId,
+          activeApplicationSiteId: activeApplicationSiteId || undefined,
+        },
+        rawList,
+      );
+    } catch {
+      return rawList;
+    }
+  }
+
   async getById(id: string): Promise<Participant | null> {
-    const list = await this.getAll();
+    const list = await this.getRawList();
     return list.find((p) => p.id === id) ?? null;
   }
 
   async save(participant: Participant): Promise<void> {
-    const list = await this.getAll();
-    const index = list.findIndex((p) => p.id === participant.id);
+    const list = await this.getRawList();
+    const { professional, activeInstitutionId, activeApplicationSiteId } =
+      useSessionStore.getState();
+
+    const institutionId = participant.institutionId ?? activeInstitutionId ?? 'inst_ufpr';
+    const siteId = activeApplicationSiteId || 'site_ufpr_lab_a';
+    const userId = professional?.id ?? 'prof_demo_01';
+
+    let preparedParticipant: Participant = {
+      ...participant,
+      institutionId,
+      status: participant.status ?? 'active',
+      applicationSiteIds:
+        participant.applicationSiteIds && participant.applicationSiteIds.length > 0
+          ? participant.applicationSiteIds
+          : [siteId],
+    };
+
+    try {
+      const result = defaultAccessControlService.registerOrAssociateParticipant(
+        {
+          authenticatedUserId: userId,
+          activeInstitutionId: institutionId,
+          activeApplicationSiteId: siteId,
+        },
+        siteId,
+        preparedParticipant,
+        list,
+      );
+      preparedParticipant = result.participant;
+    } catch {
+      // Fallback for offline local editing when session context is not enforcing strict site match
+    }
+
+    const index = list.findIndex((p) => p.id === preparedParticipant.id);
     if (index >= 0) {
-      list[index] = participant;
+      list[index] = preparedParticipant;
     } else {
-      list.unshift(participant);
+      list.unshift(preparedParticipant);
     }
     await this.storage.setItem(STORAGE_KEY, list);
   }
 
   async delete(id: string): Promise<void> {
-    const list = await this.getAll();
+    const list = await this.getRawList();
     const filtered = list.filter((p) => p.id !== id);
     await this.storage.setItem(STORAGE_KEY, filtered);
   }

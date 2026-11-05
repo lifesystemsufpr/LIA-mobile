@@ -17,7 +17,8 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.ufpr.equilibrium"
     },
     "web": {
       "output": "static",
@@ -36,6 +37,11 @@
     ],
     "experiments": {
       "reactCompiler": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b43b7c93-4dd0-47cd-8d83-27083339daa4"
+      }
     }
   }
 }

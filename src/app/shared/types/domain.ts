@@ -4,16 +4,85 @@ export type ProtocolId = '30sSTS' | '1MSTS' | '5TSTS' | '2MST' | 'UTT' | 'TUG' |
 
 export type SyncStatus = 'pending' | 'syncing' | 'synced' | 'failed';
 
+export type InstitutionalRole = 'ADMIN' | 'GESTOR_UNIDADE' | 'AVALIADOR';
+
+export type SiteScopedRole = 'GESTOR_UNIDADE' | 'AVALIADOR';
+
+export type RecordStatus = 'active' | 'inactive';
+
+export type OrganizationalUnitType =
+  | 'CAMPUS'
+  | 'FACULDADE'
+  | 'DEPARTAMENTO'
+  | 'CENTRO'
+  | 'OUTRO';
+
+export type Institution = {
+  id: string;
+  name: string;
+  acronym: string;
+  status: RecordStatus;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type OrganizationalUnit = {
+  id: string;
+  institutionId: string;
+  parentUnitId?: string | null;
+  name: string;
+  type: OrganizationalUnitType;
+  status: RecordStatus;
+};
+
+export type ApplicationSite = {
+  id: string;
+  institutionId: string;
+  organizationalUnitId?: string | null;
+  name: string;
+  description?: string;
+  address?: string;
+  status: RecordStatus;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type InstitutionMembership = {
+  id: string;
+  userId: string;
+  institutionId: string;
+  role: InstitutionalRole;
+  status: RecordStatus;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type ApplicationSiteMembership = {
+  id: string;
+  institutionMembershipId: string;
+  applicationSiteId: string;
+  role: SiteScopedRole;
+  status: RecordStatus;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type Professional = {
   id: string;
   name: string;
   email: string;
   professionalCategory: string;
   professionalRegistration: string;
+  status?: RecordStatus;
 };
 
 export type Participant = {
   id: string;
+  institutionId?: string;
+  institutionalCode?: string;
+  applicationSiteId?: string;
+  applicationSiteIds?: string[];
+  status?: RecordStatus;
   fullName: string;
   birthDate: string; // ISO 8601 (YYYY-MM-DD)
   biologicalSex: BiologicalSex;
@@ -68,6 +137,10 @@ export type SensorSample = {
 
 export type Assessment = {
   id: string;
+  institutionId?: string;
+  applicationSiteId?: string;
+  evaluatorUserId?: string;
+  protocolVersionId?: string;
   participantId: string;
   professionalId: string;
   protocolId: ProtocolId;
